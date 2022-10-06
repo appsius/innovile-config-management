@@ -3,10 +3,15 @@ const styles = {
     display: 'flex',
     transition: 'all 0.3s ease-in-out !important',
   },
-
   Hide: {
     display: 'none',
     transition: 'all 0.3s ease-in-out !important',
+  },
+  TableRow: {
+    height: 2,
+  },
+  TableCell: {
+    padding: '0px 16px',
   },
   AutocorrectionTableButtons: {
     width: '11.11vw !important',
@@ -38,6 +43,32 @@ const styles = {
   UpdateButton: {
     width: '4.5vw !important',
     backgroundColor: '#097ddb !important',
+  },
+  Pagination: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'black',
+    marginTop: '10px',
+    height: '7.5vh',
+  },
+  PaginationItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '20px',
+    height: '20px',
+    textAlign: 'center',
+    listStyleType: 'none',
+    margin: '0 5px',
+    padding: '1rem',
+    borderRadius: '50%',
+    backgroundColor: 'transparent',
+    fontSize: '12.5px',
+  },
+  PageActive: {
+    backgroundColor: '#757575',
+    color: 'white',
   },
 };
 

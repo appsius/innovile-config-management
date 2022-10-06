@@ -4,7 +4,6 @@ const getData = async (dataURL, setData) => {
   await axios
     .get(dataURL)
     .then((result) => {
-      console.log(result);
       return setData(result.data);
     })
     .catch((err) => console.log(err));

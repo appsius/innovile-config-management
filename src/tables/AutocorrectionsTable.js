@@ -8,7 +8,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Alert from '@mui/material/Alert';
+// import {
+//   Link,
+//   MemoryRouter,
+//   Route,
+//   Routes,
+//   useLocation,
+// } from 'react-router-dom';
+// import Pagination from '@mui/material/Pagination';
+// import PaginationItem from '@mui/material/PaginationItem';
 import { deleteData } from '../helpers';
 import AutocorrectionCreateForm from '../forms-create/AutocorrectionCreateForm';
 import AutocorrectionUpdateForm from '../forms-update/AutocorrectionUpdateForm';
@@ -70,6 +78,10 @@ function AutocorrectionsTable({
   const [resetNameMode, setResetNameMode] = useState(false);
   const [resetDNameMode, setResetDNameMode] = useState(false);
   const [resetAddressMode, setResetAddressMode] = useState(false);
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(10);
+  const [pageActive, setPageActive] = useState(1);
 
   const openAutocorrectionForm = () => {
     // set validation modes
@@ -113,76 +125,129 @@ function AutocorrectionsTable({
     setRenderedData('autocorrections-rendered');
   };
 
+  const handleClick = (event) => {
+    const id = Number(event.target.id);
+    setCurrentPage(id);
+    setPageActive(id);
+  };
+
+  // Logic for displaying autocorrections
+  const indexOfLastAutocorrection = currentPage * autocorrectionsPerPage;
+  const indexOfFirstAutocorrection =
+    indexOfLastAutocorrection - autocorrectionsPerPage;
+  const currentAutocorrections = autocorrections.slice(
+    indexOfFirstAutocorrection,
+    indexOfLastAutocorrection
+  );
+
+  // Logic for displaying page numbers
+  const pageNumbers = [];
+  for (
+    let i = 1;
+    i <= Math.ceil(autocorrections.length / autocorrectionsPerPage);
+    i++
+  ) {
+    pageNumbers.push(i);
+  }
+
+  const pageNumbersItems = pageNumbers.map((number) => {
+    return (
+      <li
+        key={number}
+        id={number}
+        className={
+          classes.PaginationItem +
+          ' ' +
+          (pageActive === number && classes.PageActive)
+        }
+        onClick={handleClick}
+      >
+        {number}
+      </li>
+    );
+  });
+
+  const autocorrectionsItems = (
+    <Table sx={{ minWidth: 700 }} aria-label='customized table'>
+      <TableHead>
+        <TableRow className={classes.TableRow}>
+          <StyledTableCell align='left'>Name</StyledTableCell>
+          <StyledTableCell align='left'>Description</StyledTableCell>
+          <StyledTableCell align='left'>Start Date</StyledTableCell>
+          <StyledTableCell align='left'>End Date</StyledTableCell>
+          <StyledTableCell align='center'>Operation Type</StyledTableCell>
+          <StyledTableCell align='left'>Created Date</StyledTableCell>
+          <StyledTableCell
+            align='right'
+            className={classes.AutocorrectionTableButtons}
+          >
+            <Button
+              className={classes.Button + ' ' + classes.InsertButton}
+              variant='contained'
+              color='success'
+              onClick={() => openAutocorrectionForm()}
+            >
+              NEW AUTOCORRECTION
+            </Button>
+          </StyledTableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {currentAutocorrections.map((autocorrection, index) => {
+          const {
+            id,
+            name,
+            description,
+            start_date,
+            end_date,
+            operation_type,
+            created_date,
+          } = autocorrection;
+          return (
+            <StyledTableRow key={id} className={classes.TableRow}>
+              <StyledTableCell align='left'>{name}</StyledTableCell>
+              <StyledTableCell align='left'>
+                {description.slice(1, 60) + '...'}
+              </StyledTableCell>
+              <StyledTableCell align='center'>{start_date}</StyledTableCell>
+              <StyledTableCell align='center'>{end_date}</StyledTableCell>
+              <StyledTableCell align='center'>{operation_type}</StyledTableCell>
+              <StyledTableCell align='center'>{created_date}</StyledTableCell>
+              <StyledTableCell align='right'>
+                <Button
+                  className={classes.Button + ' ' + classes.UpdateButton}
+                  variant='contained'
+                  onClick={() => handleAutocorrectionUpdate(autocorrection)}
+                >
+                  UPDATE
+                </Button>
+                <Button
+                  className={classes.Button + ' ' + classes.DeleteButton}
+                  variant='contained'
+                  color='error'
+                  id={id}
+                  onClick={(e) => handleAutocorrectionDelete(e.target.id)}
+                >
+                  DELETE
+                </Button>
+              </StyledTableCell>
+            </StyledTableRow>
+          );
+        })}
+      </TableBody>
+      {/* pagination page list */}
+    </Table>
+  );
+
   return (
     <div>
       <TableContainer
         component={Paper}
         className={showAutocorrectionTable ? classes.Show : classes.Hide}
       >
-        <Table sx={{ minWidth: 700 }} aria-label='customized table'>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align='left'>ID</StyledTableCell>
-              <StyledTableCell align='center'>Code</StyledTableCell>
-              <StyledTableCell align='center'>Name</StyledTableCell>
-              <StyledTableCell align='center'>Display Name</StyledTableCell>
-              <StyledTableCell align='center'>Address</StyledTableCell>
-              <StyledTableCell align='center'></StyledTableCell>
-              <StyledTableCell align='center'>
-                Autocorrection Type
-              </StyledTableCell>
-              <StyledTableCell
-                align='right'
-                className={classes.AutocorrectionTableButtons}
-              >
-                <Button
-                  className={classes.Button + ' ' + classes.InsertButton}
-                  variant='contained'
-                  color='success'
-                  onClick={() => openAutocorrectionForm()}
-                >
-                  NEW AUTOCORRECTION
-                </Button>
-              </StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {autocorrections.map((autocorrection, sIdx) => {
-              const { id, code, name, displayName, address } = autocorrection;
-              return (
-                <StyledTableRow key={id}>
-                  <StyledTableCell align='left'>{sIdx + 1}</StyledTableCell>
-                  <StyledTableCell align='center'>{code}</StyledTableCell>
-                  <StyledTableCell align='center'>{name}</StyledTableCell>
-                  <StyledTableCell align='center'>
-                    {displayName}
-                  </StyledTableCell>
-                  <StyledTableCell align='center'>{address}</StyledTableCell>
-                  <StyledTableCell align='center'></StyledTableCell>
-                  <StyledTableCell align='right'>
-                    <Button
-                      className={classes.Button + ' ' + classes.UpdateButton}
-                      variant='contained'
-                      onClick={() => handleAutocorrectionUpdate(autocorrection)}
-                    >
-                      UPDATE
-                    </Button>
-                    <Button
-                      className={classes.Button + ' ' + classes.DeleteButton}
-                      variant='contained'
-                      color='error'
-                      id={id}
-                      onClick={(e) => handleAutocorrectionDelete(e.target.id)}
-                    >
-                      DELETE
-                    </Button>
-                  </StyledTableCell>
-                </StyledTableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+        {autocorrectionsItems}
       </TableContainer>
+      <ul className={classes.Pagination}>{pageNumbersItems}</ul>
       {showAutocorrectionCreateForm && (
         <AutocorrectionCreateForm
           // autocorrections data
