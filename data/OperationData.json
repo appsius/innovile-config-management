@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Generate" },
+  { "id": 2, "name": "Run" },
+  { "id": 3, "name": "Validate" }
+]
