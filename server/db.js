@@ -7,11 +7,11 @@ const vendorRoute = require('../data/Vendor.json');
 
 module.exports = function () {
   return {
-    autocorrectionRoute: autocorrectionRoute,
-    autocorrectionDetailRoute: autocorrectionDetailRoute,
-    operationTypeRoute: operationTypeRoute,
-    usersRoute: usersRoute,
-    technologyRoute: technologyRoute,
-    vendorRoute: vendorRoute,
+    autocorrections: autocorrectionRoute,
+    autocorrectionDetails: autocorrectionDetailRoute,
+    operationTypes: operationTypeRoute,
+    users: usersRoute,
+    technologies: technologyRoute,
+    vendors: vendorRoute,
   };
 };
