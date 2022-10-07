@@ -52,12 +52,6 @@ function AutocorrectionUpdateForm({
     if (!values.address && resetAddressMode === false) {
       errors.address = 'Address is required';
     }
-    if (!values.selectedCityName && resetCityMode === false) {
-      errors.selectedCityName = 'City is required';
-    }
-    if (!values.selectedAutocorrectionTypeName && resetSTypeMode === false) {
-      errors.selectedAutocorrectionTypeName = 'Autocorrection type is required';
-    }
     return errors;
   };
 
@@ -93,21 +87,6 @@ function AutocorrectionUpdateForm({
       setRenderedData('autocorrections-rendered');
       console.log(updatedAutocorrection);
     }
-  };
-
-  const getAutocorrectionTypesMenu = () => {
-    return autocorrectionTypes.map((autocorrectionType) => {
-      const { id, name } = autocorrectionType;
-      return (
-        <MenuItem
-          key={id}
-          value={name}
-          onClick={() => handleAutocorrectionTypeSelected(autocorrectionType)}
-        >
-          {name}
-        </MenuItem>
-      );
-    });
   };
 
   // resetting validation for autocorrection after submit

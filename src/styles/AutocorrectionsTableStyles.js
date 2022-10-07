@@ -44,13 +44,13 @@ const styles = {
     width: '4.5vw !important',
     backgroundColor: '#097ddb !important',
   },
-  Pagination: {
+  PaginationContainer: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    height: '7.5vh',
     color: 'black',
     marginTop: '10px',
-    height: '7.5vh',
   },
   PaginationItem: {
     display: 'flex',

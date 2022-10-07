@@ -4,13 +4,9 @@
   box-sizing: border-box;
 }
 
-html {
-  overflow-y: hidden !important;
-}
-
 body {
   font-family: 'Poppins', sans-serif !important;
-  overflow: scroll !important;
+  overflow: none !important;
 }
 
 .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {

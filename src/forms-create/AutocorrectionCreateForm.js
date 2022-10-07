@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { TextField, Select } from 'final-form-material-ui';
-import { Paper, Grid, Button, MenuItem, withStyles } from '@material-ui/core';
+import { Paper, Grid, Button, withStyles } from '@material-ui/core';
 import { v4 as uuidv4 } from 'uuid';
 import { createData } from '../helpers';
 import styles from '../styles/AutocorrectionCreateFormStyles';

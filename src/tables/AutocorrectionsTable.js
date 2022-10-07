@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
 import Table from '@mui/material/Table';
@@ -8,16 +8,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-// import {
-//   Link,
-//   MemoryRouter,
-//   Route,
-//   Routes,
-//   useLocation,
-// } from 'react-router-dom';
-// import Pagination from '@mui/material/Pagination';
-// import PaginationItem from '@mui/material/PaginationItem';
 import { deleteData } from '../helpers';
+import PaginationEl from '../PaginationEl';
 import AutocorrectionCreateForm from '../forms-create/AutocorrectionCreateForm';
 import AutocorrectionUpdateForm from '../forms-update/AutocorrectionUpdateForm';
 import { withStyles } from '@material-ui/core';
@@ -79,9 +71,15 @@ function AutocorrectionsTable({
   const [resetDNameMode, setResetDNameMode] = useState(false);
   const [resetAddressMode, setResetAddressMode] = useState(false);
   // pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(10);
-  const [pageActive, setPageActive] = useState(1);
+  const [currentPage, setCurrentPage] = useState(4);
+  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(12);
+  const initialAutocorrections = autocorrections.slice(
+    (currentPage - 1) * autocorrectionsPerPage,
+    currentPage * autocorrectionsPerPage
+  );
+  const [currentAutocorrections, setCurrentAutocorrections] = useState(
+    initialAutocorrections
+  );
 
   const openAutocorrectionForm = () => {
     // set validation modes
@@ -96,7 +94,7 @@ function AutocorrectionsTable({
     setShowAutocorrectionUpdateForm(false);
   };
 
-  function handleAutocorrectionUpdate(autocorrection) {
+  const handleAutocorrectionUpdate = (autocorrection) => {
     // set selected autocorrection update data
     setSelectedUpdateAutocorrection(autocorrection);
     setUpdatedAutocorrectionCode(autocorrection.code);
@@ -113,7 +111,7 @@ function AutocorrectionsTable({
     setShowAutocorrectionTable(false);
     setShowAutocorrectionCreateForm(false);
     setShowAutocorrectionUpdateForm(true);
-  }
+  };
 
   const handleAutocorrectionDelete = (id) => {
     deleteData(
@@ -124,48 +122,6 @@ function AutocorrectionsTable({
     setShowAutocorrectionTable(true);
     setRenderedData('autocorrections-rendered');
   };
-
-  const handleClick = (event) => {
-    const id = Number(event.target.id);
-    setCurrentPage(id);
-    setPageActive(id);
-  };
-
-  // Logic for displaying autocorrections
-  const indexOfLastAutocorrection = currentPage * autocorrectionsPerPage;
-  const indexOfFirstAutocorrection =
-    indexOfLastAutocorrection - autocorrectionsPerPage;
-  const currentAutocorrections = autocorrections.slice(
-    indexOfFirstAutocorrection,
-    indexOfLastAutocorrection
-  );
-
-  // Logic for displaying page numbers
-  const pageNumbers = [];
-  for (
-    let i = 1;
-    i <= Math.ceil(autocorrections.length / autocorrectionsPerPage);
-    i++
-  ) {
-    pageNumbers.push(i);
-  }
-
-  const pageNumbersItems = pageNumbers.map((number) => {
-    return (
-      <li
-        key={number}
-        id={number}
-        className={
-          classes.PaginationItem +
-          ' ' +
-          (pageActive === number && classes.PageActive)
-        }
-        onClick={handleClick}
-      >
-        {number}
-      </li>
-    );
-  });
 
   const autocorrectionsItems = (
     <Table sx={{ minWidth: 700 }} aria-label='customized table'>
@@ -193,7 +149,10 @@ function AutocorrectionsTable({
         </TableRow>
       </TableHead>
       <TableBody>
-        {currentAutocorrections.map((autocorrection, index) => {
+        {(currentAutocorrections.length === 0
+          ? initialAutocorrections
+          : currentAutocorrections
+        ).map((autocorrection, index) => {
           const {
             id,
             name,
@@ -204,7 +163,7 @@ function AutocorrectionsTable({
             created_date,
           } = autocorrection;
           return (
-            <StyledTableRow key={id} className={classes.TableRow}>
+            <StyledTableRow key={index} className={classes.TableRow}>
               <StyledTableCell align='left'>{name}</StyledTableCell>
               <StyledTableCell align='left'>
                 {description.slice(1, 60) + '...'}
@@ -235,7 +194,6 @@ function AutocorrectionsTable({
           );
         })}
       </TableBody>
-      {/* pagination page list */}
     </Table>
   );
 
@@ -247,7 +205,14 @@ function AutocorrectionsTable({
       >
         {autocorrectionsItems}
       </TableContainer>
-      <ul className={classes.Pagination}>{pageNumbersItems}</ul>
+      <PaginationEl
+        autocorrections={autocorrections}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        autocorrectionsPerPage={autocorrectionsPerPage}
+        currentAutocorrections={currentAutocorrections}
+        setCurrentAutocorrections={setCurrentAutocorrections}
+      />
       {showAutocorrectionCreateForm && (
         <AutocorrectionCreateForm
           // autocorrections data
