@@ -40,7 +40,7 @@ const styles = {
     fontSize: '12px !important',
     padding: '2px 0px !important',
     marginRight: '3px !important',
-    width: '10rem !important',
+    width: '6rem !important',
   },
   DeleteButton: {
     padding: '3.6px 10px !important',
@@ -77,7 +77,7 @@ const styles = {
     color: 'white',
   },
   SelectedAutocorrection: {
-    backgroundColor: 'red',
+    backgroundColor: '#35ff87',
   },
 };
 

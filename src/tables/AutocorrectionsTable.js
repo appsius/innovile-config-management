@@ -1,39 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { Button, MenuItem } from '@mui/material';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { deleteData } from '../helpers';
 import PaginationEl from '../PaginationEl';
 import AutocorrectionCreateForm from '../forms-create/AutocorrectionCreateForm';
 import AutocorrectionUpdateForm from '../forms-update/AutocorrectionUpdateForm';
-import { MenuList, withStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
 import styles from '../styles/AutocorrectionsTableStyles';
-
-// table rows styles
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 15,
-  },
-}));
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}));
+import { tableCellClasses } from '@mui/material/TableCell';
+import {
+  Button,
+  Alert,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 
 function AutocorrectionsTable({
   classes,
@@ -50,10 +34,11 @@ function AutocorrectionsTable({
   setShowAutocorrectionUpdateForm,
   setRenderedData,
 }) {
-  // json-server delete urls
+  // json-server urls
   const autocorrectionCreateURL = '/autocorrections';
   const autocorrectionUpdateURL = '/autocorrections/';
   const autocorrectionDeleteURL = '/autocorrections/';
+
   // selected autocorrection update data
   const [selectedUpdateAutocorrection, setSelectedUpdateAutocorrection] =
     useState({});
@@ -65,14 +50,19 @@ function AutocorrectionsTable({
     useState('');
   const [updatedAutocorrectionAddress, setUpdatedAutocorrectionAddress] =
     useState('');
+
   // validation reset controllers
   const [resetCodeMode, setResetCodeMode] = useState(false);
   const [resetNameMode, setResetNameMode] = useState(false);
   const [resetDNameMode, setResetDNameMode] = useState(false);
   const [resetAddressMode, setResetAddressMode] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+
   // pagination
   const [currentPage, setCurrentPage] = useState(4);
   const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(25);
+
+  // set items per pagination page
   const initialAutocorrections = autocorrections.slice(
     (currentPage - 1) * autocorrectionsPerPage,
     currentPage * autocorrectionsPerPage
@@ -80,6 +70,26 @@ function AutocorrectionsTable({
   const [currentAutocorrections, setCurrentAutocorrections] = useState(
     initialAutocorrections
   );
+
+  // table rows styles
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 15,
+    },
+  }));
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: '',
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
   const openAutocorrectionForm = () => {
     // set validation modes
@@ -95,6 +105,13 @@ function AutocorrectionsTable({
   };
 
   const handleAutocorrectionUpdate = () => {
+    if (!selectedUpdateAutocorrection.id) {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      return;
+    }
     const autocorrection = selectedUpdateAutocorrection;
     // set selected autocorrection update data
     setSelectedUpdateAutocorrection(autocorrection);
@@ -115,6 +132,13 @@ function AutocorrectionsTable({
   };
 
   const handleAutocorrectionDelete = (id) => {
+    if (!selectedUpdateAutocorrection.id) {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      return;
+    }
     deleteData(
       autocorrectionsGetURL,
       setAutocorrections,
@@ -125,6 +149,7 @@ function AutocorrectionsTable({
   };
 
   const handleAutocorrectionSelect = (autocorrectItem) => {
+    console.log(autocorrectItem);
     setSelectedUpdateAutocorrection(autocorrectItem);
   };
 
@@ -172,8 +197,9 @@ function AutocorrectionsTable({
               className={
                 classes.TableRow +
                 ' ' +
-                (selectedUpdateAutocorrection.id &&
-                  classes.SelectedAutocorrection)
+                (selectedUpdateAutocorrection.id === id
+                  ? classes.SelectedAutocorrection
+                  : '')
               }
               onClick={() => handleAutocorrectionSelect(autocorrection)}
             >
@@ -181,7 +207,7 @@ function AutocorrectionsTable({
                 {name}
               </StyledTableCell>
               <StyledTableCell className={classes.TableCell} align='left'>
-                {description.slice(1, 60) + '...'}
+                {description.slice(0, 60) + '...'}
               </StyledTableCell>
               <StyledTableCell className={classes.TableCell} align='left'>
                 {start_date}
@@ -204,6 +230,27 @@ function AutocorrectionsTable({
 
   return (
     <div>
+      {showAlert && (
+        <Alert
+          variant='filled'
+          severity='error'
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            position: 'fixed',
+            top: '0',
+            width: '88vw',
+            height: '6vh',
+            borderRadius: 0,
+            backgroundColor: 'red',
+            fontSize: '1rem',
+            fontWeight: 'lighter',
+            letterSpacing: '1.25px',
+          }}
+        >
+          {`Please select (click) one of the list item to update | delete!`}
+        </Alert>
+      )}
       <TableContainer
         component={Paper}
         className={showAutocorrectionTable ? classes.Show : classes.Hide}
@@ -242,7 +289,6 @@ function AutocorrectionsTable({
             className={classes.Button + ' ' + classes.UpdateButton}
             variant='contained'
             onClick={() => handleAutocorrectionUpdate()}
-            disabled={!selectedUpdateAutocorrection.id}
           >
             UPDATE
           </Button>
@@ -253,7 +299,6 @@ function AutocorrectionsTable({
             onClick={() =>
               handleAutocorrectionDelete(selectedUpdateAutocorrection.id)
             }
-            disabled={!selectedUpdateAutocorrection.id}
           >
             DELETE
           </Button>
