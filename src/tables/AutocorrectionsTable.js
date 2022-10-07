@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { Button } from '@mui/material';
+import { Button, MenuItem } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -12,7 +12,7 @@ import { deleteData } from '../helpers';
 import PaginationEl from '../PaginationEl';
 import AutocorrectionCreateForm from '../forms-create/AutocorrectionCreateForm';
 import AutocorrectionUpdateForm from '../forms-update/AutocorrectionUpdateForm';
-import { withStyles } from '@material-ui/core';
+import { MenuList, withStyles } from '@material-ui/core';
 import styles from '../styles/AutocorrectionsTableStyles';
 
 // table rows styles
@@ -72,7 +72,7 @@ function AutocorrectionsTable({
   const [resetAddressMode, setResetAddressMode] = useState(false);
   // pagination
   const [currentPage, setCurrentPage] = useState(4);
-  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(22);
+  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(25);
   const initialAutocorrections = autocorrections.slice(
     (currentPage - 1) * autocorrectionsPerPage,
     currentPage * autocorrectionsPerPage
@@ -94,7 +94,8 @@ function AutocorrectionsTable({
     setShowAutocorrectionUpdateForm(false);
   };
 
-  const handleAutocorrectionUpdate = (autocorrection) => {
+  const handleAutocorrectionUpdate = () => {
+    const autocorrection = selectedUpdateAutocorrection;
     // set selected autocorrection update data
     setSelectedUpdateAutocorrection(autocorrection);
     setUpdatedAutocorrectionCode(autocorrection.code);
@@ -123,6 +124,10 @@ function AutocorrectionsTable({
     setRenderedData('autocorrections-rendered');
   };
 
+  const handleAutocorrectionSelect = (autocorrectItem) => {
+    setSelectedUpdateAutocorrection(autocorrectItem);
+  };
+
   const autocorrectionsItems = (
     <Table sx={{ minWidth: 700 }} aria-label='customized table'>
       <TableHead>
@@ -145,21 +150,6 @@ function AutocorrectionsTable({
           <StyledTableCell className={classes.TableCellTitle} align='left'>
             Created Date
           </StyledTableCell>
-          <StyledTableCell
-            align='right'
-            className={
-              classes.AutocorrectionTableButtons + ' ' + classes.TableCellTitle
-            }
-          >
-            <Button
-              className={classes.Button + ' ' + classes.InsertButton}
-              variant='contained'
-              color='success'
-              onClick={() => openAutocorrectionForm()}
-            >
-              NEW AUTOCORRECTION
-            </Button>
-          </StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -177,7 +167,16 @@ function AutocorrectionsTable({
             created_date,
           } = autocorrection;
           return (
-            <StyledTableRow key={index} className={classes.TableRow}>
+            <StyledTableRow
+              key={index}
+              className={
+                classes.TableRow +
+                ' ' +
+                (selectedUpdateAutocorrection.id &&
+                  classes.SelectedAutocorrection)
+              }
+              onClick={() => handleAutocorrectionSelect(autocorrection)}
+            >
               <StyledTableCell className={classes.TableCell} align='left'>
                 {name}
               </StyledTableCell>
@@ -196,24 +195,6 @@ function AutocorrectionsTable({
               <StyledTableCell className={classes.TableCell} align='left'>
                 {created_date}
               </StyledTableCell>
-              <StyledTableCell className={classes.TableCell} align='right'>
-                <Button
-                  className={classes.Button + ' ' + classes.UpdateButton}
-                  variant='contained'
-                  onClick={() => handleAutocorrectionUpdate(autocorrection)}
-                >
-                  UPDATE
-                </Button>
-                <Button
-                  className={classes.Button + ' ' + classes.DeleteButton}
-                  variant='contained'
-                  color='error'
-                  id={id}
-                  onClick={(e) => handleAutocorrectionDelete(e.target.id)}
-                >
-                  DELETE
-                </Button>
-              </StyledTableCell>
             </StyledTableRow>
           );
         })}
@@ -229,14 +210,56 @@ function AutocorrectionsTable({
       >
         {autocorrectionsItems}
       </TableContainer>
-      <PaginationEl
-        autocorrections={autocorrections}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        autocorrectionsPerPage={autocorrectionsPerPage}
-        currentAutocorrections={currentAutocorrections}
-        setCurrentAutocorrections={setCurrentAutocorrections}
-      />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <PaginationEl
+          autocorrections={autocorrections}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          autocorrectionsPerPage={autocorrectionsPerPage}
+          currentAutocorrections={currentAutocorrections}
+          setCurrentAutocorrections={setCurrentAutocorrections}
+        />
+        <div
+          align='right'
+          style={{ position: 'fixed', right: '5vh', bottom: '5vh' }}
+        >
+          <Button
+            className={classes.Button + ' ' + classes.InsertButton}
+            variant='contained'
+            color='success'
+            onClick={() => openAutocorrectionForm()}
+          >
+            INSERT
+          </Button>
+          <Button
+            className={classes.Button + ' ' + classes.UpdateButton}
+            variant='contained'
+            onClick={() => handleAutocorrectionUpdate()}
+            disabled={!selectedUpdateAutocorrection.id}
+          >
+            UPDATE
+          </Button>
+          <Button
+            className={classes.Button + ' ' + classes.DeleteButton}
+            variant='contained'
+            color='error'
+            onClick={() =>
+              handleAutocorrectionDelete(selectedUpdateAutocorrection.id)
+            }
+            disabled={!selectedUpdateAutocorrection.id}
+          >
+            DELETE
+          </Button>
+        </div>
+      </div>
+
       {showAutocorrectionCreateForm && (
         <AutocorrectionCreateForm
           // autocorrections data

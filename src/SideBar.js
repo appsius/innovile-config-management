@@ -52,26 +52,20 @@ function SideBar({ classes }) {
       <div className={classes.Sidebar}>
         <div className={classes.Menu}>
           <React.Fragment>
-            <div
-              style={{
-                width: '13vw',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <div>
               <Button
                 variant='contained'
                 style={{
                   backgroundColor: 'black',
                   textTransform: 'uppercase',
-                  minWidth: '64px',
+                  minWidth: '10.25vw',
+                  height: '5.75vh',
                   padding: '6px 16px',
+                  marginTop: '-.75vh',
                   borderRadius: '4px',
                 }}
               >
-                Dashboard
+                Autocorrection
               </Button>
             </div>
           </React.Fragment>

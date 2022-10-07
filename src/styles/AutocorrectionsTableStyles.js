@@ -14,7 +14,7 @@ const styles = {
     height: '12px',
   },
   TableCell: {
-    padding: '.5px 4px !important',
+    padding: '2px 4px !important',
   },
   TableCellTitle: {
     padding: '5px 4px !important',
@@ -75,6 +75,9 @@ const styles = {
   PageActive: {
     backgroundColor: '#757575',
     color: 'white',
+  },
+  SelectedAutocorrection: {
+    backgroundColor: 'red',
   },
 };
 

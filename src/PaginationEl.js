@@ -40,10 +40,16 @@ function PaginationEl({
   return (
     <ul
       className={classes.PaginationContainer}
-      style={{ position: 'relative', marginLeft: '1.5vh' }}
+      style={{
+        position: 'fixed',
+        left: '22.5vh',
+        bottom: '3vh',
+        marginLeft: '1.5vh',
+      }}
+      align='left'
     >
       {pageNumbersItems.slice(0, 2)}
-      {currentPage != 1 && '...'}
+      {currentPage > 2 && '...'}
       {currentPage >= 3 &&
         currentPage <= pageNumbersItems.length - 2 &&
         pageNumbersItems[currentPage - 1]}
