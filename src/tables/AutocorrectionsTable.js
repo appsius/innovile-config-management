@@ -72,7 +72,7 @@ function AutocorrectionsTable({
   const [resetAddressMode, setResetAddressMode] = useState(false);
   // pagination
   const [currentPage, setCurrentPage] = useState(4);
-  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(12);
+  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(22);
   const initialAutocorrections = autocorrections.slice(
     (currentPage - 1) * autocorrectionsPerPage,
     currentPage * autocorrectionsPerPage
@@ -127,15 +127,29 @@ function AutocorrectionsTable({
     <Table sx={{ minWidth: 700 }} aria-label='customized table'>
       <TableHead>
         <TableRow className={classes.TableRow}>
-          <StyledTableCell align='left'>Name</StyledTableCell>
-          <StyledTableCell align='left'>Description</StyledTableCell>
-          <StyledTableCell align='left'>Start Date</StyledTableCell>
-          <StyledTableCell align='left'>End Date</StyledTableCell>
-          <StyledTableCell align='center'>Operation Type</StyledTableCell>
-          <StyledTableCell align='left'>Created Date</StyledTableCell>
+          <StyledTableCell className={classes.TableCellTitle} align='left'>
+            Name
+          </StyledTableCell>
+          <StyledTableCell className={classes.TableCellTitle} align='left'>
+            Description
+          </StyledTableCell>
+          <StyledTableCell className={classes.TableCellTitle} align='left'>
+            Start Date
+          </StyledTableCell>
+          <StyledTableCell className={classes.TableCellTitle} align='left'>
+            End Date
+          </StyledTableCell>
+          <StyledTableCell className={classes.TableCellTitle} align='center'>
+            Operation Type
+          </StyledTableCell>
+          <StyledTableCell className={classes.TableCellTitle} align='left'>
+            Created Date
+          </StyledTableCell>
           <StyledTableCell
             align='right'
-            className={classes.AutocorrectionTableButtons}
+            className={
+              classes.AutocorrectionTableButtons + ' ' + classes.TableCellTitle
+            }
           >
             <Button
               className={classes.Button + ' ' + classes.InsertButton}
@@ -164,15 +178,25 @@ function AutocorrectionsTable({
           } = autocorrection;
           return (
             <StyledTableRow key={index} className={classes.TableRow}>
-              <StyledTableCell align='left'>{name}</StyledTableCell>
-              <StyledTableCell align='left'>
+              <StyledTableCell className={classes.TableCell} align='left'>
+                {name}
+              </StyledTableCell>
+              <StyledTableCell className={classes.TableCell} align='left'>
                 {description.slice(1, 60) + '...'}
               </StyledTableCell>
-              <StyledTableCell align='center'>{start_date}</StyledTableCell>
-              <StyledTableCell align='center'>{end_date}</StyledTableCell>
-              <StyledTableCell align='center'>{operation_type}</StyledTableCell>
-              <StyledTableCell align='center'>{created_date}</StyledTableCell>
-              <StyledTableCell align='right'>
+              <StyledTableCell className={classes.TableCell} align='left'>
+                {start_date}
+              </StyledTableCell>
+              <StyledTableCell className={classes.TableCell} align='left'>
+                {end_date}
+              </StyledTableCell>
+              <StyledTableCell className={classes.TableCell} align='center'>
+                {operation_type}
+              </StyledTableCell>
+              <StyledTableCell className={classes.TableCell} align='left'>
+                {created_date}
+              </StyledTableCell>
+              <StyledTableCell className={classes.TableCell} align='right'>
                 <Button
                   className={classes.Button + ' ' + classes.UpdateButton}
                   variant='contained'

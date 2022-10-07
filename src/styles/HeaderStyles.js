@@ -6,7 +6,7 @@ const styles = {
     justifyContent: 'center !important',
     fontSize: '24px !important',
     fontWeight: '200 !important',
-    height: '9vh !important',
+    height: '5.75vh !important',
     color: 'white !important',
     letterSpacing: '1px !important',
   },

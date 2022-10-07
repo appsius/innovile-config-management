@@ -7,17 +7,23 @@ const styles = {
     display: 'none',
     transition: 'all 0.3s ease-in-out !important',
   },
+  TableRowTitle: {
+    height: '12px',
+  },
   TableRow: {
-    height: 2,
+    height: '12px',
   },
   TableCell: {
-    padding: '0px 16px',
+    padding: '.5px 4px !important',
+  },
+  TableCellTitle: {
+    padding: '5px 4px !important',
   },
   AutocorrectionTableButtons: {
-    width: '11.11vw !important',
+    width: '10vw !important',
   },
   Button: {
-    padding: '3px 10px !important',
+    padding: '2px 8px !important',
     fontSize: '12px !important',
     marginRight: '8px !important',
     fontWeight: 'normal !important',
@@ -31,10 +37,10 @@ const styles = {
     color: 'black !important',
     backgroundColor: 'aquamarine !important',
     whiteSpace: 'normal !important',
-    fontSize: '13px !important',
-    padding: '5px 5px !important',
-    marginRight: '7px !important',
-    width: '12rem !important',
+    fontSize: '12px !important',
+    padding: '2px 0px !important',
+    marginRight: '3px !important',
+    width: '10rem !important',
   },
   DeleteButton: {
     padding: '3.6px 10px !important',

@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core';
 import styles from './styles/AutocorrectionsTableStyles';
 
 function PaginationDropdown({
+  classes,
   autocorrections,
   currentPage,
   setCurrentPage,
@@ -27,13 +28,7 @@ function PaginationDropdown({
     setCurrentAutocorrections(paginatedAutocorrections);
   };
 
-  const handleDropdownOpen = (e, node) => {
-    // setCurrentAutocorrections(
-    //   autocorrections.slice(
-    //     autocorrectionsPerPage * (currentPage - 1),
-    //     autocorrectionsPerPage * currentPage
-    //   )
-    // );
+  const handleDropdownOpen = () => {
     if (dropdownIsOpen) {
       setDropdownIsOpen(false);
       setOpenDropDownText('Close Menu');
@@ -47,27 +42,37 @@ function PaginationDropdown({
   return (
     <Paper
       style={{
-        margin: '0 1rem',
         position: 'absolute',
         left: '11vw',
-        bottom: '1vh',
-        backgroundColor: 'black',
-        color: 'white',
+        bottom: '1.25vh',
+        margin: '0 1rem',
+        backgroundColor: 'rgb(250, 250, 250)',
+        color: 'black',
       }}
     >
-      <MenuList>
+      <MenuList
+        style={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {/* Pagination dropdown page items, Ex. [0 - 10] */}
         {dropdownIsOpen &&
           pageNumbers
             .map((number, idx) => (
-              <div key={idx}>
+              <div key={idx} className={classes.DropdownMenuItem}>
                 <MenuItem onClick={() => handleClick(number)}>
                   <ListItemText
                     style={{
-                      margin: '0 30px 0 0',
                       padding: '5px 0px',
+                      marginRight: '30px',
                     }}
                   >
-                    {idx * autocorrectionsPerPage} -
+                    {idx * autocorrectionsPerPage}
+                    {' - '}
                     {idx !== pageNumbers.length - 1
                       ? (idx + 1) * autocorrectionsPerPage
                       : autocorrections.length}
@@ -76,17 +81,21 @@ function PaginationDropdown({
               </div>
             ))
             .reverse()}
+        {/* Pagination Button */}
         {
-          <MenuItem onClick={() => handleDropdownOpen()}>
-            <ListItemText
-              style={{
-                margin: '0 30px 0 0',
-                padding: '5px 0px',
-              }}
-            >
-              {openDropDownText}
-            </ListItemText>
-          </MenuItem>
+          <div className={classes.DropdownMenuItem}>
+            <MenuItem onClick={() => handleDropdownOpen()}>
+              <ListItemText
+                style={{
+                  height: '20px',
+                  padding: '0px 0px',
+                  marginRight: '30px',
+                }}
+              >
+                {openDropDownText}
+              </ListItemText>
+            </MenuItem>
+          </div>
         }
       </MenuList>
     </Paper>

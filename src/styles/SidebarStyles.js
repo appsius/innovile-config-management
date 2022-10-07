@@ -1,11 +1,11 @@
 const styles = {
   Content: {
-    height: '91vh !important',
+    height: '95vh !important',
   },
   Sidebar: {
     display: 'flex !important',
     flexDirection: 'row !important',
-    height: '91vh !important',
+    height: '95vh !important',
     backgroundColor: '#fffcf8 !important',
     color: 'black !important',
   },
