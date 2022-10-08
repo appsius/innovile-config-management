@@ -6,6 +6,7 @@ import PaginationDropdown from './PaginationDropdown';
 function PaginationEl({
   classes,
   autocorrections,
+  setAutocorrections,
   currentPage,
   setCurrentPage,
   autocorrectionsPerPage,
@@ -42,22 +43,23 @@ function PaginationEl({
       className={classes.PaginationContainer}
       style={{
         position: 'fixed',
-        left: '22.5vh',
+        left: '40vw',
         bottom: '3vh',
         marginLeft: '1.5vh',
       }}
-      align='left'
+      align='center'
     >
       {pageNumbersItems.slice(0, 2)}
       {currentPage > 2 && '...'}
       {currentPage >= 3 &&
         currentPage <= pageNumbersItems.length - 2 &&
         pageNumbersItems[currentPage - 1]}
-      {currentPage != pageNumbersItems.length - 1 && '...'}
+      {currentPage !== pageNumbersItems.length - 1 && '...'}
       {pageNumbersItems.slice(pageNumbersItems.length - 2)}
 
       <PaginationDropdown
         autocorrections={autocorrections}
+        setAutocorrections={setAutocorrections}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         pageNumbers={pageNumbers}

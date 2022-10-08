@@ -29,3 +29,8 @@ body {
 .css-11xur9t-MuiPaper-root-MuiTableContainer-root {
   border-radius: 0 !important;
 }
+
+/* Sidebar-menu */
+.css-sghohy-MuiButtonBase-root-MuiButton-root {
+  border-radius: 2px !important;
+}

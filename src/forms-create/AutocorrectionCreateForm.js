@@ -110,22 +110,22 @@ function AutocorrectionCreateForm({
               className={classes.AutocorrectionCreateForm}
             >
               <Paper style={{ padding: '16px 16px 44px 16px' }}>
-                <Grid container alignItems='flex-start' spacing={8}>
+                <Grid container alignItems='flex-start' spacing={6}>
                   <Grid
                     item
                     xs={12}
                     className={classes.AutocorrectionFormTitle}
                   >
                     <h2
+                      align='left'
                       style={{
-                        marginLeft: '-55%',
                         fontWeight: '300',
                       }}
                     >
                       Autocorrection Create Form
                     </h2>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <Field
                       fullWidth
                       name='code'
@@ -134,7 +134,7 @@ function AutocorrectionCreateForm({
                       onClick={() => handleCodeResetMode()}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <Field
                       fullWidth
                       name='name'
@@ -143,7 +143,7 @@ function AutocorrectionCreateForm({
                       onClick={() => handleNameResetMode()}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <Field
                       fullWidth
                       name='displayName'
@@ -152,7 +152,7 @@ function AutocorrectionCreateForm({
                       onClick={() => handleDisplayNameResetMode()}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <Field
                       fullWidth
                       name='address'

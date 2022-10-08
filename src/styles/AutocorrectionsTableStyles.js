@@ -12,6 +12,9 @@ const styles = {
   },
   TableRow: {
     height: '12px',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   },
   TableCell: {
     padding: '2px 4px !important',
@@ -23,32 +26,28 @@ const styles = {
     width: '10vw !important',
   },
   Button: {
+    width: '5vw !important',
     padding: '2px 8px !important',
     fontSize: '12px !important',
-    marginRight: '8px !important',
     fontWeight: 'normal !important',
-    letterSpacing: '0.5px !important',
+    letterSpacing: '1.4px !important',
     fontFamily: 'Poppins !important',
     color: 'rgb(255, 255, 255) !important',
     borderRadius: '2.5px !important',
   },
-  InsertButton: {
-    display: 'inline-block !important',
-    color: 'black !important',
-    backgroundColor: 'aquamarine !important',
-    whiteSpace: 'normal !important',
-    fontSize: '12px !important',
-    padding: '2px 0px !important',
-    marginRight: '3px !important',
-    width: '6rem !important',
+  DetailsButton: {
+    width: '100% !important',
+    backgroundColor: '#079CAA !important',
   },
-  DeleteButton: {
-    padding: '3.6px 10px !important',
-    backgroundColor: 'rgb(255 0 0) !important',
+  InsertButton: {
+    backgroundColor: '#087b07 !important',
   },
   UpdateButton: {
-    width: '4.5vw !important',
     backgroundColor: '#097ddb !important',
+    margin: '0 12px !important',
+  },
+  DeleteButton: {
+    backgroundColor: 'rgb(255 0 0) !important',
   },
   PaginationContainer: {
     display: 'flex',
@@ -73,11 +72,15 @@ const styles = {
     fontSize: '12.5px',
   },
   PageActive: {
-    backgroundColor: '#757575',
+    backgroundColor: '#757575 !important',
     color: 'white',
   },
+  DropdownActiveItem: {
+    backgroundColor: '#E7E7E7 !important',
+    color: 'black',
+  },
   SelectedAutocorrection: {
-    backgroundColor: '#35ff87',
+    backgroundColor: '#a8f7ff',
   },
 };
 

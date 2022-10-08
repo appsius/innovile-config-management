@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { deleteData } from '../helpers';
 import PaginationEl from '../PaginationEl';
@@ -23,8 +23,12 @@ function AutocorrectionsTable({
   classes,
   // autocorrections data
   autocorrections,
-  autocorrectionsGetURL,
   setAutocorrections,
+  // URLs
+  autocorrectionsGetURL,
+  autocorrectionCreateURL,
+  autocorrectionUpdateURL,
+  autocorrectionDeleteURL,
   // show/hide form or table
   showAutocorrectionTable,
   setShowAutocorrectionTable,
@@ -32,13 +36,7 @@ function AutocorrectionsTable({
   setShowAutocorrectionCreateForm,
   showAutocorrectionUpdateForm,
   setShowAutocorrectionUpdateForm,
-  setRenderedData,
 }) {
-  // json-server urls
-  const autocorrectionCreateURL = '/autocorrections';
-  const autocorrectionUpdateURL = '/autocorrections/';
-  const autocorrectionDeleteURL = '/autocorrections/';
-
   // selected autocorrection update data
   const [selectedUpdateAutocorrection, setSelectedUpdateAutocorrection] =
     useState({});
@@ -50,6 +48,7 @@ function AutocorrectionsTable({
     useState('');
   const [updatedAutocorrectionAddress, setUpdatedAutocorrectionAddress] =
     useState('');
+  const [itemIsDeleted, setItemIsDeleted] = useState(null);
 
   // validation reset controllers
   const [resetCodeMode, setResetCodeMode] = useState(false);
@@ -57,19 +56,24 @@ function AutocorrectionsTable({
   const [resetDNameMode, setResetDNameMode] = useState(false);
   const [resetAddressMode, setResetAddressMode] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [currentAutocorrections, setCurrentAutocorrections] = useState([]);
 
   // pagination
   const [currentPage, setCurrentPage] = useState(4);
   const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(25);
+  // initial autocorrections
 
-  // set items per pagination page
-  const initialAutocorrections = autocorrections.slice(
-    (currentPage - 1) * autocorrectionsPerPage,
-    currentPage * autocorrectionsPerPage
-  );
-  const [currentAutocorrections, setCurrentAutocorrections] = useState(
-    initialAutocorrections
-  );
+  const getCurrentAutocorrections = () => {
+    const currentAutos = autocorrections.slice(
+      (currentPage - 1) * autocorrectionsPerPage,
+      currentPage * autocorrectionsPerPage
+    );
+    setCurrentAutocorrections(currentAutos);
+  };
+
+  useEffect(() => {
+    getCurrentAutocorrections();
+  }, []);
 
   // table rows styles
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -104,52 +108,54 @@ function AutocorrectionsTable({
     setShowAutocorrectionUpdateForm(false);
   };
 
-  const handleAutocorrectionUpdate = () => {
-    if (!selectedUpdateAutocorrection.id) {
+  const handleAutocorrectionUpdate = (id) => {
+    if (!id) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
       }, 3000);
-      return;
+    } else {
+      // set selected autocorrection update data
+      setSelectedUpdateAutocorrection(selectedUpdateAutocorrection);
+      setUpdatedAutocorrectionCode(selectedUpdateAutocorrection.code);
+      setUpdatedAutocorrectionName(selectedUpdateAutocorrection.name);
+      setUpdatedAutocorrectionDName(selectedUpdateAutocorrection.displayName);
+      setUpdatedAutocorrectionAddress(selectedUpdateAutocorrection.address);
+      // set validation modes
+      // not show validation errors when open update form
+      setResetCodeMode(true);
+      setResetNameMode(true);
+      setResetDNameMode(true);
+      setResetAddressMode(true);
+      // hide table and show update form
+      setShowAutocorrectionTable(false);
+      setShowAutocorrectionCreateForm(false);
+      setShowAutocorrectionUpdateForm(true);
     }
-    const autocorrection = selectedUpdateAutocorrection;
-    // set selected autocorrection update data
-    setSelectedUpdateAutocorrection(autocorrection);
-    setUpdatedAutocorrectionCode(autocorrection.code);
-    setUpdatedAutocorrectionName(autocorrection.name);
-    setUpdatedAutocorrectionDName(autocorrection.displayName);
-    setUpdatedAutocorrectionAddress(autocorrection.address);
-    // set validation modes
-    // not show validation errors when open update form
-    setResetCodeMode(true);
-    setResetNameMode(true);
-    setResetDNameMode(true);
-    setResetAddressMode(true);
-    // hide table and show update form
-    setShowAutocorrectionTable(false);
-    setShowAutocorrectionCreateForm(false);
-    setShowAutocorrectionUpdateForm(true);
   };
 
   const handleAutocorrectionDelete = (id) => {
-    if (!selectedUpdateAutocorrection.id) {
+    if (!id) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
       }, 3000);
+    } else if (id) {
+      // delete method
+      deleteData(
+        autocorrectionsGetURL,
+        setAutocorrections,
+        autocorrectionDeleteURL + id
+      );
+      setItemIsDeleted(id);
+      getCurrentAutocorrections();
+      setSelectedUpdateAutocorrection({});
+    } else {
       return;
     }
-    deleteData(
-      autocorrectionsGetURL,
-      setAutocorrections,
-      autocorrectionDeleteURL + id
-    );
-    setShowAutocorrectionTable(true);
-    setRenderedData('autocorrections-rendered');
   };
 
   const handleAutocorrectionSelect = (autocorrectItem) => {
-    console.log(autocorrectItem);
     setSelectedUpdateAutocorrection(autocorrectItem);
   };
 
@@ -178,10 +184,7 @@ function AutocorrectionsTable({
         </TableRow>
       </TableHead>
       <TableBody>
-        {(currentAutocorrections.length === 0
-          ? initialAutocorrections
-          : currentAutocorrections
-        ).map((autocorrection, index) => {
+        {currentAutocorrections.map((autocorrection, index) => {
           const {
             id,
             name,
@@ -191,16 +194,17 @@ function AutocorrectionsTable({
             operation_type,
             created_date,
           } = autocorrection;
+          console.log(itemIsDeleted === id);
           return (
             <StyledTableRow
               key={index}
               className={
                 classes.TableRow +
                 ' ' +
-                (selectedUpdateAutocorrection.id === id
-                  ? classes.SelectedAutocorrection
-                  : '')
+                (selectedUpdateAutocorrection.id === id &&
+                  classes.SelectedAutocorrection)
               }
+              style={{ display: `${itemIsDeleted === id && 'none'}` }}
               onClick={() => handleAutocorrectionSelect(autocorrection)}
             >
               <StyledTableCell className={classes.TableCell} align='left'>
@@ -239,8 +243,8 @@ function AutocorrectionsTable({
             alignItems: 'center',
             position: 'fixed',
             top: '0',
-            width: '88vw',
-            height: '6vh',
+            width: '89vw',
+            height: '5.75vh',
             borderRadius: 0,
             backgroundColor: 'red',
             fontSize: '1rem',
@@ -248,7 +252,7 @@ function AutocorrectionsTable({
             letterSpacing: '1.25px',
           }}
         >
-          {`Please select (click) one of the list item to update | delete!`}
+          {`Please select (click) one of the list item to UPDATE or DELETE!`}
         </Alert>
       )}
       <TableContainer
@@ -262,11 +266,29 @@ function AutocorrectionsTable({
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
         }}
       >
+        <div
+          style={{
+            position: 'fixed',
+            left: '12vw',
+            bottom: '5vh',
+            width: '8vw',
+          }}
+        >
+          <Button
+            className={classes.Button + ' ' + classes.DetailsButton}
+            variant='contained'
+            color='success'
+            // onClick={() => showDetailsForm()}
+          >
+            SHOW DETAILS
+          </Button>
+        </div>
         <PaginationEl
           autocorrections={autocorrections}
+          setAutocorrections={setAutocorrections}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           autocorrectionsPerPage={autocorrectionsPerPage}
@@ -288,7 +310,9 @@ function AutocorrectionsTable({
           <Button
             className={classes.Button + ' ' + classes.UpdateButton}
             variant='contained'
-            onClick={() => handleAutocorrectionUpdate()}
+            onClick={() =>
+              handleAutocorrectionUpdate(selectedUpdateAutocorrection.id)
+            }
           >
             UPDATE
           </Button>
@@ -296,9 +320,9 @@ function AutocorrectionsTable({
             className={classes.Button + ' ' + classes.DeleteButton}
             variant='contained'
             color='error'
-            onClick={() =>
-              handleAutocorrectionDelete(selectedUpdateAutocorrection.id)
-            }
+            onClick={() => {
+              handleAutocorrectionDelete(selectedUpdateAutocorrection.id);
+            }}
           >
             DELETE
           </Button>
@@ -324,7 +348,6 @@ function AutocorrectionsTable({
           setShowAutocorrectionTable={setShowAutocorrectionTable}
           showAutocorrectionCreateForm={showAutocorrectionCreateForm}
           setShowAutocorrectionCreateForm={setShowAutocorrectionCreateForm}
-          setRenderedData={setRenderedData}
         />
       )}
       {showAutocorrectionUpdateForm && (
@@ -357,7 +380,6 @@ function AutocorrectionsTable({
           setShowAutocorrectionTable={setShowAutocorrectionTable}
           showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
           setShowAutocorrectionUpdateForm={setShowAutocorrectionUpdateForm}
-          setRenderedData={setRenderedData}
         />
       )}
     </div>

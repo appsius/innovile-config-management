@@ -4,7 +4,7 @@ const styles = {
     display: 'flex !important',
     alignItems: 'center !important',
     justifyContent: 'center !important',
-    fontSize: '24px !important',
+    fontSize: '20px !important',
     fontWeight: '200 !important',
     height: '5.75vh !important',
     color: 'white !important',

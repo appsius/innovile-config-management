@@ -1,8 +1,5 @@
-import React, { useState, useRef } from 'react';
-import Paper from '@mui/material/Paper';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
+import React, { useState, useEffect } from 'react';
+import { Paper, MenuList, MenuItem, ListItemText } from '@mui/material';
 import { withStyles } from '@material-ui/core';
 import styles from './styles/AutocorrectionsTableStyles';
 
@@ -19,11 +16,11 @@ function PaginationDropdown({
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const [openDropDownText, setOpenDropDownText] = useState('Open Menu');
 
-  const handleClick = (number) => {
-    setCurrentPage(number);
+  const handleClick = (num) => {
+    setCurrentPage(num);
     const paginatedAutocorrections = autocorrections.slice(
-      (number - 1) * autocorrectionsPerPage,
-      number * autocorrectionsPerPage
+      (num - 1) * autocorrectionsPerPage,
+      num * autocorrectionsPerPage
     );
     setCurrentAutocorrections(paginatedAutocorrections);
   };
@@ -64,7 +61,12 @@ function PaginationDropdown({
           pageNumbers
             .map((number, idx) => (
               <div key={idx} className={classes.DropdownMenuItem}>
-                <MenuItem onClick={() => handleClick(number)}>
+                <MenuItem
+                  onClick={() => handleClick(number)}
+                  className={
+                    currentPage === number ? classes.DropdownActiveItem : ''
+                  }
+                >
                   <ListItemText
                     style={{
                       padding: '5px 0px',
