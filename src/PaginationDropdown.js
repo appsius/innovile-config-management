@@ -11,10 +11,13 @@ function PaginationDropdown({
   pageNumbers,
   autocorrectionsPerPage,
   setCurrentAutocorrections,
+  // show or hide dropdown
+  showAutocorrectionUpdateForm,
+  showAutocorrectionCreateForm,
 }) {
   // Logic for displaying autocorrections
-  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const [openDropDownText, setOpenDropDownText] = useState('Open Menu');
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
 
   const handleClick = (num) => {
     setCurrentPage(num);
@@ -28,7 +31,7 @@ function PaginationDropdown({
   const handleDropdownOpen = () => {
     if (dropdownIsOpen) {
       setDropdownIsOpen(false);
-      setOpenDropDownText('Close Menu');
+      setOpenDropDownText('Open Menu');
     }
     if (!dropdownIsOpen) {
       setDropdownIsOpen(true);
@@ -57,7 +60,9 @@ function PaginationDropdown({
         }}
       >
         {/* Pagination dropdown page items, Ex. [0 - 10] */}
-        {dropdownIsOpen &&
+        {!showAutocorrectionUpdateForm &&
+          !showAutocorrectionCreateForm &&
+          dropdownIsOpen &&
           pageNumbers
             .map((number, idx) => (
               <div key={idx} className={classes.DropdownMenuItem}>
@@ -86,7 +91,12 @@ function PaginationDropdown({
         {/* Pagination Button */}
         {
           <div className={classes.DropdownMenuItem}>
-            <MenuItem onClick={() => handleDropdownOpen()}>
+            <MenuItem
+              onClick={() => handleDropdownOpen()}
+              disabled={
+                showAutocorrectionUpdateForm || showAutocorrectionCreateForm
+              }
+            >
               <ListItemText
                 style={{
                   height: '20px',

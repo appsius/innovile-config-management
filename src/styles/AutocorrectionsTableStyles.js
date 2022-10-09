@@ -40,14 +40,15 @@ const styles = {
     backgroundColor: '#079CAA !important',
   },
   InsertButton: {
-    backgroundColor: '#087b07 !important',
+    backgroundColor: '#079CAA !important',
   },
   UpdateButton: {
-    backgroundColor: '#097ddb !important',
-    margin: '0 12px !important',
+    backgroundColor: '#079CAA !important',
+    margin: '0 12.5px !important',
   },
   DeleteButton: {
-    backgroundColor: 'rgb(255 0 0) !important',
+    backgroundColor: 'rgb(255, 42, 42) !important',
+    width: '5.75vw !important',
   },
   PaginationContainer: {
     display: 'flex',
@@ -81,6 +82,10 @@ const styles = {
   },
   SelectedAutocorrection: {
     backgroundColor: '#a8f7ff',
+  },
+  Icons: {
+    marginRight: '6px',
+    fontSize: '18px !important',
   },
 };
 

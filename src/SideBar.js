@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import { getData } from './helpers';
-import AutocorrectionsTable from './tables/AutocorrectionsTable';
 import { withStyles } from '@material-ui/core';
+import AutocorrectionsTable from './tables/AutocorrectionsTable';
+import { getData } from './helpers';
 import styles from './styles/SidebarStyles';
 
 function SideBar({ classes }) {
@@ -38,9 +38,10 @@ function SideBar({ classes }) {
             style={{
               backgroundColor: 'black',
               textTransform: 'uppercase',
-              minWidth: '10.25vw',
+              fontSize: '14px',
+              width: '10vw',
+              padding: '10px',
               height: '4vh',
-              padding: '6px 16px',
               marginTop: '-.75vh',
               borderRadius: '0 !important',
             }}

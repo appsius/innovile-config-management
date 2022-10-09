@@ -26,13 +26,17 @@ const styles = {
   },
   FormButtons: {
     color: '#fff !important',
-    backgroundColor: '#000000 !important',
+    backgroundColor: '#079caa  !important',
     padding: '5.25px 100px !important',
   },
   AutocorrectionCancelButton: {
     backgroundColor: 'rgb(255, 42, 42) !important',
     marginRight: '20px !important',
     padding: '5.25px 100px !important',
+  },
+  OperationTypeSelectContainer: {
+    width: '100% !important',
+    padding: '10px 0px 10px 10px !important',
   },
 };
 

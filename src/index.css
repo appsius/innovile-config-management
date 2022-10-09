@@ -13,7 +13,8 @@ body {
   overflow-y: 'none' !important;
 }
 
-.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+/* Dropdown menu */
+.css-h4y409-MuiList-root div li {
   width: 10vw !important;
   padding: 0.25rem 0px !important;
   display: flex !important;
@@ -21,9 +22,9 @@ body {
   padding-left: 20% !important;
 }
 
-.css-sghohy-MuiButtonBase-root-MuiButton-root {
-  background-color: black !important;
-  width: 10vw;
+/* Select Operation Type */
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+  width: 100% !important;
 }
 
 .css-11xur9t-MuiPaper-root-MuiTableContainer-root {

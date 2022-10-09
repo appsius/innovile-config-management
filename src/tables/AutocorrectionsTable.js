@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment-timezone';
+
 import { styled } from '@mui/material/styles';
-import { deleteData } from '../helpers';
+import { deleteData, getData } from '../helpers';
 import PaginationEl from '../PaginationEl';
 import AutocorrectionCreateForm from '../forms-create/AutocorrectionCreateForm';
 import AutocorrectionUpdateForm from '../forms-update/AutocorrectionUpdateForm';
 import { withStyles } from '@material-ui/core';
 import styles from '../styles/AutocorrectionsTableStyles';
 import { tableCellClasses } from '@mui/material/TableCell';
+
 import {
   Button,
   Alert,
@@ -18,6 +21,9 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function AutocorrectionsTable({
   classes,
@@ -37,29 +43,40 @@ function AutocorrectionsTable({
   showAutocorrectionUpdateForm,
   setShowAutocorrectionUpdateForm,
 }) {
-  // selected autocorrection update data
+  const operationTypeGetURL = 'http://localhost:3000/operationTypes';
+  const [operationTypes, setOperationTypes] = useState([]);
+  useEffect(() => {
+    getData(operationTypeGetURL, setOperationTypes);
+  }, []);
+
+  // select autocorrection update data
+  const nowDateTime = moment(new Date())
+    .tz('Europe/Istanbul')
+    .format('YYYY-MM-DD hh:mm:ss');
   const [selectedUpdateAutocorrection, setSelectedUpdateAutocorrection] =
     useState({});
-  const [updatedAutocorrectionCode, setUpdatedAutocorrectionCode] =
-    useState('');
-  const [updatedAutocorrectionName, setUpdatedAutocorrectionName] =
-    useState('');
-  const [updatedAutocorrectionDName, setUpdatedAutocorrectionDName] =
-    useState('');
-  const [updatedAutocorrectionAddress, setUpdatedAutocorrectionAddress] =
-    useState('');
-  const [itemIsDeleted, setItemIsDeleted] = useState(null);
+  const [
+    selectedUpdateAutocorrectionOpType,
+    setSelectedUpdateAutocorrectionOpType,
+  ] = useState({});
+  const [
+    selectedUpdateAutocorrectionStartDate,
+    setSelectedUpdateAutocorrectionStartDate,
+  ] = useState('');
+  const [
+    selectedUpdateAutocorrectionEndDate,
+    setSelectedUpdateAutocorrectionEndDate,
+  ] = useState('');
+  const [itemIsDeleted, setItemIsDeleted] = useState(1);
 
   // validation reset controllers
-  const [resetCodeMode, setResetCodeMode] = useState(false);
   const [resetNameMode, setResetNameMode] = useState(false);
-  const [resetDNameMode, setResetDNameMode] = useState(false);
-  const [resetAddressMode, setResetAddressMode] = useState(false);
+  const [resetDescMode, setResetDescMode] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [currentAutocorrections, setCurrentAutocorrections] = useState([]);
 
   // pagination
-  const [currentPage, setCurrentPage] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1);
   const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(25);
   // initial autocorrections
 
@@ -97,11 +114,8 @@ function AutocorrectionsTable({
 
   const openAutocorrectionForm = () => {
     // set validation modes
-    // not show validation errors when open create form
-    setResetCodeMode(true);
     setResetNameMode(true);
-    setResetDNameMode(true);
-    setResetAddressMode(true);
+    setResetDescMode(true);
     // hide table and show create form
     setShowAutocorrectionCreateForm(true);
     setShowAutocorrectionTable(false);
@@ -115,18 +129,20 @@ function AutocorrectionsTable({
         setShowAlert(false);
       }, 3000);
     } else {
-      // set selected autocorrection update data
+      // set selected autocorrection to update
+      setSelectedUpdateAutocorrectionOpType(
+        selectedUpdateAutocorrection.operation_type
+      );
+      setSelectedUpdateAutocorrectionStartDate(
+        selectedUpdateAutocorrection.start_date
+      );
+      setSelectedUpdateAutocorrectionEndDate(
+        selectedUpdateAutocorrection.end_date
+      );
       setSelectedUpdateAutocorrection(selectedUpdateAutocorrection);
-      setUpdatedAutocorrectionCode(selectedUpdateAutocorrection.code);
-      setUpdatedAutocorrectionName(selectedUpdateAutocorrection.name);
-      setUpdatedAutocorrectionDName(selectedUpdateAutocorrection.displayName);
-      setUpdatedAutocorrectionAddress(selectedUpdateAutocorrection.address);
       // set validation modes
-      // not show validation errors when open update form
-      setResetCodeMode(true);
       setResetNameMode(true);
-      setResetDNameMode(true);
-      setResetAddressMode(true);
+      setResetDescMode(true);
       // hide table and show update form
       setShowAutocorrectionTable(false);
       setShowAutocorrectionCreateForm(false);
@@ -194,7 +210,6 @@ function AutocorrectionsTable({
             operation_type,
             created_date,
           } = autocorrection;
-          console.log(itemIsDeleted === id);
           return (
             <StyledTableRow
               key={index}
@@ -294,6 +309,9 @@ function AutocorrectionsTable({
           autocorrectionsPerPage={autocorrectionsPerPage}
           currentAutocorrections={currentAutocorrections}
           setCurrentAutocorrections={setCurrentAutocorrections}
+          // show or hide dropdown
+          showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
+          showAutocorrectionCreateForm={showAutocorrectionCreateForm}
         />
         <div
           align='right'
@@ -305,7 +323,8 @@ function AutocorrectionsTable({
             color='success'
             onClick={() => openAutocorrectionForm()}
           >
-            INSERT
+            <AddCircleIcon className={classes.Icons} />
+            NEW
           </Button>
           <Button
             className={classes.Button + ' ' + classes.UpdateButton}
@@ -314,7 +333,8 @@ function AutocorrectionsTable({
               handleAutocorrectionUpdate(selectedUpdateAutocorrection.id)
             }
           >
-            UPDATE
+            <ModeEditIcon className={classes.Icons} />
+            EDIT
           </Button>
           <Button
             className={classes.Button + ' ' + classes.DeleteButton}
@@ -324,7 +344,8 @@ function AutocorrectionsTable({
               handleAutocorrectionDelete(selectedUpdateAutocorrection.id);
             }}
           >
-            DELETE
+            <DeleteIcon className={classes.Icons} />
+            REMOVE
           </Button>
         </div>
       </div>
@@ -332,18 +353,17 @@ function AutocorrectionsTable({
       {showAutocorrectionCreateForm && (
         <AutocorrectionCreateForm
           // autocorrections data
-          autocorrectionsGetURL={autocorrectionsGetURL}
+          autocorrections={autocorrections}
           setAutocorrections={setAutocorrections}
+          operationTypes={operationTypes}
+          autocorrectionsGetURL={autocorrectionsGetURL}
           autocorrectionCreateURL={autocorrectionCreateURL}
           // validation reset modes
-          resetCodeMode={resetCodeMode}
           resetNameMode={resetNameMode}
-          resetDNameMode={resetDNameMode}
-          resetAddressMode={resetAddressMode}
-          setResetCodeMode={setResetCodeMode}
+          resetDescMode={resetDescMode}
+          // set validation reset modes
           setResetNameMode={setResetNameMode}
-          setResetDNameMode={setResetDNameMode}
-          setResetAddressMode={setResetAddressMode}
+          setResetDescMode={setResetDescMode}
           // hide table, show autocorrection create form
           setShowAutocorrectionTable={setShowAutocorrectionTable}
           showAutocorrectionCreateForm={showAutocorrectionCreateForm}
@@ -353,29 +373,37 @@ function AutocorrectionsTable({
       {showAutocorrectionUpdateForm && (
         <AutocorrectionUpdateForm
           // autocorrections data
+          operationTypes={operationTypes}
+          setAutocorrections={setAutocorrections}
           autocorrectionsGetURL={autocorrectionsGetURL}
           autocorrectionUpdateURL={autocorrectionUpdateURL}
-          setAutocorrections={setAutocorrections}
-          // selected autocorrection update data
+          // selected data
+          selectedUpdateAutocorrectionOpType={
+            selectedUpdateAutocorrectionOpType
+          }
+          setSelectedUpdateAutocorrectionOpType={
+            setSelectedUpdateAutocorrectionOpType
+          }
+          selectedUpdateAutocorrectionStartDate={
+            selectedUpdateAutocorrectionStartDate
+          }
+          setSelectedUpdateAutocorrectionStartDate={
+            setSelectedUpdateAutocorrectionStartDate
+          }
+          selectedUpdateAutocorrectionEndDate={
+            selectedUpdateAutocorrectionEndDate
+          }
+          setSelectedUpdateAutocorrectionEndDate={
+            setSelectedUpdateAutocorrectionEndDate
+          }
           selectedUpdateAutocorrection={selectedUpdateAutocorrection}
           setSelectedUpdateAutocorrection={setSelectedUpdateAutocorrection}
-          updatedAutocorrectionCode={updatedAutocorrectionCode}
-          setUpdatedAutocorrectionCode={setUpdatedAutocorrectionCode}
-          updatedAutocorrectionName={updatedAutocorrectionName}
-          setUpdatedAutocorrectionName={setUpdatedAutocorrectionName}
-          updatedAutocorrectionDName={updatedAutocorrectionDName}
-          setUpdatedAutocorrectionDName={setUpdatedAutocorrectionDName}
-          updatedAutocorrectionAddress={updatedAutocorrectionAddress}
-          setUpdatedAutocorrectionAddress={setUpdatedAutocorrectionAddress}
           // validation reset modes
-          resetCodeMode={resetCodeMode}
           resetNameMode={resetNameMode}
-          resetDNameMode={resetDNameMode}
-          resetAddressMode={resetAddressMode}
-          setResetCodeMode={setResetCodeMode}
+          resetDescMode={resetDescMode}
+          // set validation reset modes
           setResetNameMode={setResetNameMode}
-          setResetDNameMode={setResetDNameMode}
-          setResetAddressMode={setResetAddressMode}
+          setResetDescMode={setResetDescMode}
           // hide table, show autocorrection update form
           setShowAutocorrectionTable={setShowAutocorrectionTable}
           showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}

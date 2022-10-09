@@ -11,6 +11,9 @@ function PaginationEl({
   setCurrentPage,
   autocorrectionsPerPage,
   setCurrentAutocorrections,
+  // show or hide dropdown
+  showAutocorrectionUpdateForm,
+  showAutocorrectionCreateForm,
 }) {
   // Logic for displaying page numbers
   const pageNumbers = [];
@@ -65,6 +68,9 @@ function PaginationEl({
         pageNumbers={pageNumbers}
         autocorrectionsPerPage={autocorrectionsPerPage}
         setCurrentAutocorrections={setCurrentAutocorrections}
+        // show or hide dropdown
+        showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
+        showAutocorrectionCreateForm={showAutocorrectionCreateForm}
       />
     </ul>
   );

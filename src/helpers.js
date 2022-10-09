@@ -1,31 +1,41 @@
 import axios from 'axios';
 
 const getData = async (dataURL, setData) => {
-  await axios
-    .get(dataURL)
-    .then((result) => {
-      console.log(result.data.length);
-      return setData(result.data);
-    })
-    .catch((err) => console.log(err));
+  const res = await fetch(dataURL);
+  const data = await res.json();
+  const sortedAutocorrections = data.sort(
+    (a, b) => new Date(b.created_date) - new Date(a.created_date)
+  );
+  setData(sortedAutocorrections);
 };
 
 const createData = async (dataURL, setData, createURL, body) => {
-  await axios.post(createURL, body).then(() => console.log('Inserted'));
+  await fetch(createURL, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
   getData(dataURL, setData);
 };
 
 const updateData = async (dataURL, setData, updateURL, body) => {
-  await axios.put(updateURL, body).then(() => {
-    console.log('Updated');
+  await fetch(updateURL, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
   });
   getData(dataURL, setData);
 };
 
 const deleteData = async (dataURL, setData, deleteURL) => {
-  getData(dataURL, setData);
-  await axios.delete(deleteURL).then(() => {
-    console.log('Deleted');
+  await fetch(deleteURL, {
+    method: 'DELETE',
   });
   getData(dataURL, setData);
 };
