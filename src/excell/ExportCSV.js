@@ -7,17 +7,21 @@ import { Button } from '@mui/material';
 
 function ExportCSV({
   classes,
-  autocorrectionDetails,
   vendors,
   technologies,
   filename,
+  matchedAutocorrectionDetails,
+  setShowAutocorrectionDetailsTable,
+  setShowAutocorrectionTable,
+  setShowFooterButtons,
 }) {
   const fileType =
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
   const fileExtension = '.xlsx';
   let formattedAutos = [];
-  autocorrectionDetails.forEach((auto, index) => {
-    const { id, branch, oss_name, site, vendor, technology } = auto;
+
+  matchedAutocorrectionDetails.forEach((auto, index) => {
+    const { branch, oss_name, site, vendor, technology } = auto;
     const ven = vendors.filter((v) => v.id === vendor)[0].name;
     const tech = technologies.filter((t) => t.id === technology)[0].name;
     const newAuto = {
@@ -36,6 +40,11 @@ function ExportCSV({
     const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, newFilename + fileExtension);
+    setTimeout(() => {
+      setShowAutocorrectionDetailsTable(false);
+      setShowAutocorrectionTable(true);
+      setShowFooterButtons(true);
+    }, 1000);
   };
 
   return (

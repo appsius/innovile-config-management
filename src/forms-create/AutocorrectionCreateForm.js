@@ -173,6 +173,8 @@ function AutocorrectionCreateForm({
                       fullWidth
                       name='description'
                       component={TextField}
+                      minRows={3}
+                      multiline
                       label='Autocorrection Description'
                       onClick={() => handleDescResetMode()}
                     />

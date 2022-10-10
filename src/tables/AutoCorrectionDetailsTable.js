@@ -42,11 +42,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function AutoCorrectionDetailsTable({
   classes,
   // autocorrections data
-  autocorrectionDetails,
-  autocorrectionDetailsGetURL,
-  selectedUpdateAutocorrection,
+  matchedAutocorrectionDetails,
+  setSelectedUpdateAutocorrection,
   // show/hide form or table
-  showAutocorrectionTable,
   showAutocorrectionCreateForm,
   showAutocorrectionUpdateForm,
   showAutocorrectionDetailsTable,
@@ -54,40 +52,23 @@ function AutoCorrectionDetailsTable({
   setShowFooterButtons,
   setShowAutocorrectionDetailsTable,
 }) {
-  // select autocorrection update data
-
   const nowDateTime = moment(new Date())
     .tz('Europe/Istanbul')
     .format('YYYY-MM-DD hh:mm');
   // validation reset controllers
-  const [currentAutocorrections, setCurrentAutocorrections] = useState([]);
   const [vendors, setVendors] = useState([]);
   const [technologies, setTechnologies] = useState([]);
   const VendorGetURL = 'http://localhost:3000/vendors';
   const TechnologyGetURL = 'http://localhost:3000/technologies';
-  // pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(20);
-  // initial autocorrections
-  const getCurrentAutocorrections = () => {
-    const currentAutos = autocorrectionDetails.slice(
-      (currentPage - 1) * autocorrectionsPerPage,
-      currentPage * autocorrectionsPerPage
-    );
-    setCurrentAutocorrections(currentAutos);
-  };
 
   useEffect(() => {
-    getCurrentAutocorrections();
     getData(VendorGetURL, setVendors);
     getData(TechnologyGetURL, setTechnologies);
   }, []);
 
-  const handleAutocorrectionDetailExport = (currentAutocorrections) => {
-    setShowAutocorrectionDetailsTable(false);
-    setShowAutocorrectionTable(true);
-    setShowFooterButtons(true);
-  };
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(20);
 
   const handleCloseAutoCorrectionDetail = () => {
     setShowAutocorrectionDetailsTable(false);
@@ -111,44 +92,46 @@ function AutoCorrectionDetailsTable({
           <StyledTableCell className={classes.TableCellTitle} align='left'>
             Vendor
           </StyledTableCell>
-          <StyledTableCell className={classes.TableCellTitle} align='left'>
+          <StyledTableCell className={classes.TableCellTitle} align='center'>
             Technology
           </StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {currentAutocorrections.map((autocorrection, index) => {
-          const vendor = vendors.filter(
-            (v) => v.id === autocorrection.vendor
-          )[0].name;
-          const technology = technologies.filter(
-            (t) => t.id === autocorrection.technology
-          )[0].name;
-
-          let ven = vendor;
-          let tech = technology;
-
-          const { branch, oss_name, site } = autocorrection;
-          return (
-            <StyledTableRow key={index} className={classes.TableRow}>
-              <StyledTableCell className={classes.TableCell} align='left'>
-                {branch}
-              </StyledTableCell>
-              <StyledTableCell className={classes.TableCell} align='left'>
-                {oss_name}
-              </StyledTableCell>
-              <StyledTableCell className={classes.TableCell} align='left'>
-                {site}
-              </StyledTableCell>
-              <StyledTableCell className={classes.TableCell} align='left'>
-                {ven}
-              </StyledTableCell>
-              <StyledTableCell className={classes.TableCell} align='left'>
-                {tech}
-              </StyledTableCell>
-            </StyledTableRow>
-          );
-        })}
+        {matchedAutocorrectionDetails.length === 0 && (
+          <div className={classes.NoDataText}>
+            The autocorrection details doesn"t exist
+          </div>
+        )}
+        {matchedAutocorrectionDetails.length > 0 &&
+          matchedAutocorrectionDetails.map((autocorrection, index) => {
+            const { branch, oss_name, site } = autocorrection;
+            const vendor = vendors.filter(
+              (v) => v.id === autocorrection.vendor && v.name
+            )[0].name;
+            const technology = technologies.filter(
+              (t) => t.id === autocorrection.technology && t.name
+            )[0].name;
+            return (
+              <StyledTableRow key={index} className={classes.TableRow}>
+                <StyledTableCell className={classes.TableCell} align='left'>
+                  {branch}
+                </StyledTableCell>
+                <StyledTableCell className={classes.TableCell} align='left'>
+                  {oss_name}
+                </StyledTableCell>
+                <StyledTableCell className={classes.TableCell} align='left'>
+                  {site}
+                </StyledTableCell>
+                <StyledTableCell className={classes.TableCell} align='left'>
+                  {vendor}
+                </StyledTableCell>
+                <StyledTableCell className={classes.TableCell} align='center'>
+                  {technology}
+                </StyledTableCell>
+              </StyledTableRow>
+            );
+          })}
       </TableBody>
     </Table>
   );
@@ -169,12 +152,10 @@ function AutoCorrectionDetailsTable({
         >
           {
             <PaginationDetailsEl
-              autocorrectionDetails={autocorrectionDetails}
+              matchedAutocorrectionDetails={matchedAutocorrectionDetails}
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               autocorrectionsPerPage={autocorrectionsPerPage}
-              currentAutocorrections={currentAutocorrections}
-              setCurrentAutocorrections={setCurrentAutocorrections}
               // show or hide dropdown
               showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
               showAutocorrectionCreateForm={showAutocorrectionCreateForm}
@@ -196,8 +177,14 @@ function AutoCorrectionDetailsTable({
             <ExportCSV
               vendors={vendors}
               technologies={technologies}
-              autocorrectionDetails={autocorrectionDetails}
+              matchedAutocorrectionDetails={matchedAutocorrectionDetails}
               filename={`${nowDateTime}-Innovile-Case-Study`}
+              setSelectedUpdateAutocorrection={setSelectedUpdateAutocorrection}
+              setShowAutocorrectionDetailsTable={
+                setShowAutocorrectionDetailsTable
+              }
+              setShowAutocorrectionTable={setShowAutocorrectionTable}
+              setShowFooterButtons={setShowFooterButtons}
             />
           </div>
         </div>

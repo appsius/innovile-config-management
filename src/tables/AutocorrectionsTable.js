@@ -81,6 +81,8 @@ function AutocorrectionsTable({
   const [showAlert, setShowAlert] = useState(false);
   const [showFooterButtons, setShowFooterButtons] = useState(true);
   const [currentAutocorrections, setCurrentAutocorrections] = useState([]);
+  const [matchedAutocorrectionDetails, setMatchedAutocorrectionDetails] =
+    useState([]);
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -179,18 +181,22 @@ function AutocorrectionsTable({
     }
   };
 
-  const handleAutocorrectionDetailsTable = (id) => {
-    if (!id) {
+  const handleAutocorrectionDetailsTable = async (autocorrection) => {
+    if (!autocorrection.id) {
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
       }, 3000);
     } else {
       // hide table and show update form
-      const filteredAutoDetails = autocorrectionDetails.filter((autocorr) => {
-        return autocorr.autocorrection_id === id;
-      });
-      setAutocorrectionDetails(filteredAutoDetails);
+      await getData(autocorrectionDetailsGetURL, setAutocorrectionDetails);
+      setSelectedUpdateAutocorrection(autocorrection);
+      setMatchedAutocorrectionDetails(
+        autocorrectionDetails.filter((autocorr) => {
+          return autocorr.autocorrection_id === selectedUpdateAutocorrection.id;
+        })
+      );
+
       setShowAutocorrectionDetailsTable(true);
       setShowAutocorrectionTable(false);
       setShowFooterButtons(false);
@@ -328,9 +334,7 @@ function AutocorrectionsTable({
               variant='contained'
               color='success'
               onClick={() =>
-                handleAutocorrectionDetailsTable(
-                  selectedUpdateAutocorrection.id
-                )
+                handleAutocorrectionDetailsTable(selectedUpdateAutocorrection)
               }
             >
               SHOW DETAILS
@@ -451,10 +455,10 @@ function AutocorrectionsTable({
       {
         <AutoCorrectionDetailsTable
           // autocorrectionDetails data
-          autocorrectionDetails={autocorrectionDetails}
-          setAutocorrectionDetails={setAutocorrectionDetails}
+          matchedAutocorrectionDetails={matchedAutocorrectionDetails}
           autocorrectionDetailsGetURL={autocorrectionDetailsGetURL}
           selectedUpdateAutocorrection={selectedUpdateAutocorrection}
+          setSelectedUpdateAutocorrection={setSelectedUpdateAutocorrection}
           // hide table, show autocorrection update form
           showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
           showAutocorrectionDetailsTable={showAutocorrectionDetailsTable}

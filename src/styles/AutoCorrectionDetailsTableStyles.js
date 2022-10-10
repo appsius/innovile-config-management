@@ -7,6 +7,15 @@ const styles = {
     display: 'none',
     transition: 'all 0.3s ease-in-out !important',
   },
+  NoDataText: {
+    position: 'fixed',
+    left: '13vw',
+    marginTop: '3vh !important',
+    fontSize: '18px !important',
+    fontWeight: '400 !important',
+    letterSpacing: '1px !important',
+    color: 'rgb(255, 0, 0) !important',
+  },
   TableRowTitle: {
     height: '12px',
   },

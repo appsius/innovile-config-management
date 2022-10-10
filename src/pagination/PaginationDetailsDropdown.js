@@ -5,12 +5,11 @@ import styles from '../styles/AutocorrectionsTableStyles';
 
 function PaginationDetailsDropdown({
   classes,
-  autocorrectionDetails,
   currentPage,
   setCurrentPage,
   pageNumbers,
   autocorrectionsPerPage,
-  setCurrentAutocorrections,
+  matchedAutocorrectionDetails,
   // show or hide dropdown
   showAutocorrectionUpdateForm,
   showAutocorrectionCreateForm,
@@ -18,14 +17,15 @@ function PaginationDetailsDropdown({
   // Logic for displaying autocorrections
   const [openDropDownText, setOpenDropDownText] = useState('Open Menu');
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+  const [paginatedAutoDetails, setPaginatedAutoDetails] = useState(false);
 
   const handleClick = (num) => {
     setCurrentPage(num);
-    const paginatedAutocorrections = autocorrectionDetails.slice(
+    const paginatedAutocorrections = matchedAutocorrectionDetails.slice(
       (num - 1) * autocorrectionsPerPage,
       num * autocorrectionsPerPage
     );
-    setCurrentAutocorrections(paginatedAutocorrections);
+    setPaginatedAutoDetails(paginatedAutocorrections);
   };
 
   const handleDropdownOpen = () => {
@@ -43,7 +43,7 @@ function PaginationDetailsDropdown({
     <Paper
       style={{
         position: 'absolute',
-        left: '13.5vw',
+        left: '4vw',
         bottom: '1.25vh',
         margin: '0 1rem',
         backgroundColor: 'rgb(250, 250, 250)',
@@ -80,7 +80,7 @@ function PaginationDetailsDropdown({
                     {' - '}
                     {idx !== pageNumbers.length - 1
                       ? (idx + 1) * autocorrectionsPerPage
-                      : autocorrectionDetails.length}
+                      : matchedAutocorrectionDetails.length}
                   </ListItemText>
                 </MenuItem>
               </div>

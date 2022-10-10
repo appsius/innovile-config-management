@@ -194,9 +194,7 @@ function AutocorrectionUpdateForm({
                       component={TextField}
                       label={'Autocorrection Description'}
                       multiline
-                      rows={
-                        selectedUpdateAutocorrection.description.length / 45
-                      }
+                      minRows={4}
                       onClick={() => handleDescResetMode()}
                     />
                   </Grid>

@@ -5,11 +5,10 @@ import PaginationDetailsDropdown from './PaginationDetailsDropdown';
 
 function PaginationDetailsEl({
   classes,
-  autocorrectionDetails,
+  matchedAutocorrectionDetails,
   currentPage,
   setCurrentPage,
   autocorrectionsPerPage,
-  setCurrentAutocorrections,
   // show or hide dropdown
   showAutocorrectionUpdateForm,
   showAutocorrectionCreateForm,
@@ -18,7 +17,8 @@ function PaginationDetailsEl({
   const pageNumbers = [];
   for (
     let i = 1;
-    i <= Math.ceil(autocorrectionDetails.length / autocorrectionsPerPage);
+    i <=
+    Math.ceil(matchedAutocorrectionDetails.length / autocorrectionsPerPage);
     i++
   ) {
     pageNumbers.push(i);
@@ -54,36 +54,13 @@ function PaginationDetailsEl({
       {pageNumbersItems}
 
       {/* TODO - Pagination */}
-      {/* {currentPage === 1 &&
-        pageNumbersItems.length > 5 &&
-        pageNumbersItems.slice(0, 5)}
-      {currentPage === 1 && pageNumbersItems.length <= 5 && pageNumbersItems}
-
-      {currentPage !== 1 && pageNumbersItems.length <= 5 && pageNumbersItems}
-
-      {currentPage === pageNumbersItems.length &&
-        pageNumbersItems.length <= 5 &&
-        pageNumbersItems}
-
-      {currentPage === pageNumbersItems.length &&
-        pageNumbersItems.length > 5 &&
-        pageNumbersItems.slice(pageNumbersItems - 5)}
-
-      {currentPage !== pageNumbersItems.length &&
-        pageNumbersItems.length < 5 &&
-        pageNumbersItems}
-
-      {currentPage !== pageNumbersItems.length &&
-        pageNumbersItems.length > 5 &&
-        pageNumbersItems.slice(pageNumbersItems - 5)} */}
 
       <PaginationDetailsDropdown
-        autocorrectionDetails={autocorrectionDetails}
+        matchedAutocorrectionDetails={matchedAutocorrectionDetails}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         pageNumbers={pageNumbers}
         autocorrectionsPerPage={autocorrectionsPerPage}
-        setCurrentAutocorrections={setCurrentAutocorrections}
         // show or hide dropdown
         showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
         showAutocorrectionCreateForm={showAutocorrectionCreateForm}
