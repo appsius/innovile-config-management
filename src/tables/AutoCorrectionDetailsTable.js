@@ -5,7 +5,6 @@ import { withStyles } from '@material-ui/core';
 import { tableCellClasses } from '@mui/material/TableCell';
 import styles from '../styles/AutoCorrectionDetailsTableStyles';
 import PaginationDetailsEl from '../pagination/PaginationDetailsEl';
-import { getData } from '../helpers';
 
 import {
   Button,
@@ -17,6 +16,8 @@ import {
   TableRow,
   Paper,
 } from '@mui/material';
+import ExportCSV from '../excell/ExportCSV';
+import { getData } from '../helpers';
 
 // table rows styles
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -57,9 +58,13 @@ function AutoCorrectionDetailsTable({
 
   const nowDateTime = moment(new Date())
     .tz('Europe/Istanbul')
-    .format('YYYY-MM-DD hh:mm:ss');
+    .format('YYYY-MM-DD hh:mm');
   // validation reset controllers
   const [currentAutocorrections, setCurrentAutocorrections] = useState([]);
+  const [vendors, setVendors] = useState([]);
+  const [technologies, setTechnologies] = useState([]);
+  const VendorGetURL = 'http://localhost:3000/vendors';
+  const TechnologyGetURL = 'http://localhost:3000/technologies';
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(20);
@@ -74,9 +79,11 @@ function AutoCorrectionDetailsTable({
 
   useEffect(() => {
     getCurrentAutocorrections();
+    getData(VendorGetURL, setVendors);
+    getData(TechnologyGetURL, setTechnologies);
   }, []);
 
-  const handleAutocorrectionDetailExport = () => {
+  const handleAutocorrectionDetailExport = (currentAutocorrections) => {
     setShowAutocorrectionDetailsTable(false);
     setShowAutocorrectionTable(true);
     setShowFooterButtons(true);
@@ -104,14 +111,24 @@ function AutoCorrectionDetailsTable({
           <StyledTableCell className={classes.TableCellTitle} align='left'>
             Vendor
           </StyledTableCell>
-          <StyledTableCell className={classes.TableCellTitle} align='center'>
+          <StyledTableCell className={classes.TableCellTitle} align='left'>
             Technology
           </StyledTableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {currentAutocorrections.map((autocorrection, index) => {
-          const { branch, oss_name, site, vendor, technology } = autocorrection;
+          const vendor = vendors.filter(
+            (v) => v.id === autocorrection.vendor
+          )[0].name;
+          const technology = technologies.filter(
+            (t) => t.id === autocorrection.technology
+          )[0].name;
+
+          let ven = vendor;
+          let tech = technology;
+
+          const { branch, oss_name, site } = autocorrection;
           return (
             <StyledTableRow key={index} className={classes.TableRow}>
               <StyledTableCell className={classes.TableCell} align='left'>
@@ -124,10 +141,10 @@ function AutoCorrectionDetailsTable({
                 {site}
               </StyledTableCell>
               <StyledTableCell className={classes.TableCell} align='left'>
-                {vendor}
+                {ven}
               </StyledTableCell>
-              <StyledTableCell className={classes.TableCell} align='center'>
-                {technology}
+              <StyledTableCell className={classes.TableCell} align='left'>
+                {tech}
               </StyledTableCell>
             </StyledTableRow>
           );
@@ -175,15 +192,13 @@ function AutoCorrectionDetailsTable({
             >
               Close
             </Button>
-            <Button
-              className={classes.Button + ' ' + classes.ExportButton}
-              variant='contained'
-              onClick={() =>
-                handleAutocorrectionDetailExport(currentAutocorrections)
-              }
-            >
-              Export
-            </Button>
+            {/*Export excell table */}
+            <ExportCSV
+              vendors={vendors}
+              technologies={technologies}
+              autocorrectionDetails={autocorrectionDetails}
+              filename={`${nowDateTime}-Innovile-Case-Study`}
+            />
           </div>
         </div>
       </div>

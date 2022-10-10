@@ -40,8 +40,6 @@ function PaginationDetailsEl({
     );
   });
 
-  console.log(currentPage);
-
   return (
     <ul
       className={classes.PaginationContainer}

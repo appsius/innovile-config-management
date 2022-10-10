@@ -187,9 +187,9 @@ function AutocorrectionsTable({
       }, 3000);
     } else {
       // hide table and show update form
-      const filteredAutoDetails = autocorrectionDetails.filter(
-        (autocorr) => autocorr.autocorrection_id === id
-      );
+      const filteredAutoDetails = autocorrectionDetails.filter((autocorr) => {
+        return autocorr.autocorrection_id === id;
+      });
       setAutocorrectionDetails(filteredAutoDetails);
       setShowAutocorrectionDetailsTable(true);
       setShowAutocorrectionTable(false);
