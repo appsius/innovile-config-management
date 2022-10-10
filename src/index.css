@@ -35,3 +35,10 @@ body {
 .css-sghohy-MuiButtonBase-root-MuiButton-root {
   border-radius: 2px !important;
 }
+
+/* Lowercase buttons */
+.css-ke5b6m-MuiButtonBase-root-MuiButton-root,
+.css-sghohy-MuiButtonBase-root-MuiButton-root,
+.css-1sszw6i-MuiButtonBase-root-MuiButton-root {
+  text-transform: none !important;
+}

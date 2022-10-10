@@ -48,7 +48,7 @@ const styles = {
   },
   DeleteButton: {
     backgroundColor: 'rgb(255, 42, 42) !important',
-    width: '5.75vw !important',
+    width: '6.2vw !important',
   },
   PaginationContainer: {
     display: 'flex',

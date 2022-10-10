@@ -337,7 +337,7 @@ function AutocorrectionsTable({
                 handleAutocorrectionDetailsTable(selectedUpdateAutocorrection)
               }
             >
-              SHOW DETAILS
+              Show Details
             </Button>
           </div>
           {!showAutocorrectionUpdateForm && !showAutocorrectionCreateForm && (
@@ -365,7 +365,7 @@ function AutocorrectionsTable({
               onClick={() => openAutocorrectionForm()}
             >
               <AddCircleIcon className={classes.Icons} />
-              NEW
+              New
             </Button>
             <Button
               className={classes.Button + ' ' + classes.UpdateButton}
@@ -375,7 +375,7 @@ function AutocorrectionsTable({
               }
             >
               <ModeEditIcon className={classes.Icons} />
-              EDIT
+              Edit
             </Button>
             <Button
               className={classes.Button + ' ' + classes.DeleteButton}
@@ -386,7 +386,7 @@ function AutocorrectionsTable({
               }}
             >
               <DeleteIcon className={classes.Icons} />
-              REMOVE
+              Remove
             </Button>
           </div>
         </div>

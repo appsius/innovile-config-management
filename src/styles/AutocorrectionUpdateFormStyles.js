@@ -22,17 +22,17 @@ const styles = {
     flexDirection: 'row !important',
     alignItems: 'center !important',
     justifyContent: 'center !important',
-    paddingBottom: '8px!important',
+    paddingBottom: '8px !important',
   },
   FormButtons: {
     color: '#fff !important',
     backgroundColor: '#079caa!important',
-    padding: '5.25px 100px !important',
+    padding: '0.65vh 100px !important',
   },
   AutocorrectionCancelButton: {
     backgroundColor: 'rgb(255, 42, 42) !important',
     marginRight: '20px !important',
-    padding: '5.25px 100px !important',
+    padding: '0.65vh 100px !important',
   },
   OperationTypeSelectContainer: {
     width: '100% !important',

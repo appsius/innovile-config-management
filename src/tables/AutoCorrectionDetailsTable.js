@@ -170,6 +170,7 @@ function AutoCorrectionDetailsTable({
               variant='contained'
               color='success'
               onClick={() => handleCloseAutoCorrectionDetail()}
+              style={{ textTransform: 'none !important' }}
             >
               Close
             </Button>
