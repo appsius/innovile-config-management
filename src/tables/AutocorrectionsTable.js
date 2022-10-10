@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment-timezone';
-
 import { styled } from '@mui/material/styles';
-import { deleteData, getData } from '../helpers';
-import PaginationEl from '../PaginationEl';
+import { withStyles } from '@material-ui/core';
+import { tableCellClasses } from '@mui/material/TableCell';
+
+import styles from '../styles/AutocorrectionsTableStyles';
 import AutocorrectionCreateForm from '../forms-create/AutocorrectionCreateForm';
 import AutocorrectionUpdateForm from '../forms-update/AutocorrectionUpdateForm';
-import { withStyles } from '@material-ui/core';
-import styles from '../styles/AutocorrectionsTableStyles';
-import { tableCellClasses } from '@mui/material/TableCell';
+import PaginationEl from '../pagination/PaginationEl';
+import { deleteData, getData } from '../helpers';
 
 import {
   Button,
@@ -24,24 +24,30 @@ import {
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AutoCorrectionDetailsTable from './AutoCorrectionDetailsTable';
 
 function AutocorrectionsTable({
   classes,
   // autocorrections data
   autocorrections,
+  autocorrectionDetails,
   setAutocorrections,
+  setAutocorrectionDetails,
   // URLs
   autocorrectionsGetURL,
+  autocorrectionDetailsGetURL,
   autocorrectionCreateURL,
   autocorrectionUpdateURL,
   autocorrectionDeleteURL,
   // show/hide form or table
   showAutocorrectionTable,
-  setShowAutocorrectionTable,
   showAutocorrectionCreateForm,
-  setShowAutocorrectionCreateForm,
   showAutocorrectionUpdateForm,
+  showAutocorrectionDetailsTable,
+  setShowAutocorrectionTable,
+  setShowAutocorrectionCreateForm,
   setShowAutocorrectionUpdateForm,
+  setShowAutocorrectionDetailsTable,
 }) {
   const operationTypeGetURL = 'http://localhost:3000/operationTypes';
   const [operationTypes, setOperationTypes] = useState([]);
@@ -73,11 +79,12 @@ function AutocorrectionsTable({
   const [resetNameMode, setResetNameMode] = useState(false);
   const [resetDescMode, setResetDescMode] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [showFooterButtons, setShowFooterButtons] = useState(true);
   const [currentAutocorrections, setCurrentAutocorrections] = useState([]);
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(25);
+  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(23);
   // initial autocorrections
 
   const getCurrentAutocorrections = () => {
@@ -85,6 +92,7 @@ function AutocorrectionsTable({
       (currentPage - 1) * autocorrectionsPerPage,
       currentPage * autocorrectionsPerPage
     );
+
     setCurrentAutocorrections(currentAutos);
   };
 
@@ -120,6 +128,7 @@ function AutocorrectionsTable({
     setShowAutocorrectionCreateForm(true);
     setShowAutocorrectionTable(false);
     setShowAutocorrectionUpdateForm(false);
+    setShowAutocorrectionDetailsTable(false);
   };
 
   const handleAutocorrectionUpdate = (id) => {
@@ -144,9 +153,10 @@ function AutocorrectionsTable({
       setResetNameMode(true);
       setResetDescMode(true);
       // hide table and show update form
+      setShowAutocorrectionUpdateForm(true);
       setShowAutocorrectionTable(false);
       setShowAutocorrectionCreateForm(false);
-      setShowAutocorrectionUpdateForm(true);
+      setShowAutocorrectionDetailsTable(false);
     }
   };
 
@@ -164,10 +174,30 @@ function AutocorrectionsTable({
         autocorrectionDeleteURL + id
       );
       setItemIsDeleted(id);
-      getCurrentAutocorrections();
       setSelectedUpdateAutocorrection({});
     } else {
       return;
+    }
+  };
+
+  const handleAutocorrectionDetailsTable = (id) => {
+    if (!id) {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    } else {
+      // hide table and show update form
+      const filteredAutoDetails = autocorrectionDetails.filter(
+        (autocorr) => autocorr.autocorrection_id === id
+      );
+      console.log(filteredAutoDetails);
+      setAutocorrectionDetails(filteredAutoDetails);
+      setShowAutocorrectionDetailsTable(true);
+      setShowAutocorrectionTable(false);
+      setShowFooterButtons(false);
+      setShowAutocorrectionCreateForm(false);
+      setShowAutocorrectionUpdateForm(false);
     }
   };
 
@@ -267,89 +297,99 @@ function AutocorrectionsTable({
             letterSpacing: '1.25px',
           }}
         >
-          {`Please select (click) one of the list item to UPDATE or DELETE!`}
+          {`Please select (click) one of the list item to SHOW DETAILS | UPDATE | DELETE items!`}
         </Alert>
       )}
+      {/* Autocorrections table */}
       <TableContainer
         component={Paper}
         className={showAutocorrectionTable ? classes.Show : classes.Hide}
       >
         {autocorrectionsItems}
       </TableContainer>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-        }}
-      >
+      {/* Footer Buttons */}
+      {showFooterButtons && (
         <div
           style={{
-            position: 'fixed',
-            left: '12vw',
-            bottom: '5vh',
-            width: '8vw',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-around',
           }}
         >
-          <Button
-            className={classes.Button + ' ' + classes.DetailsButton}
-            variant='contained'
-            color='success'
-            // onClick={() => showDetailsForm()}
-          >
-            SHOW DETAILS
-          </Button>
-        </div>
-        <PaginationEl
-          autocorrections={autocorrections}
-          setAutocorrections={setAutocorrections}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          autocorrectionsPerPage={autocorrectionsPerPage}
-          currentAutocorrections={currentAutocorrections}
-          setCurrentAutocorrections={setCurrentAutocorrections}
-          // show or hide dropdown
-          showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
-          showAutocorrectionCreateForm={showAutocorrectionCreateForm}
-        />
-        <div
-          align='right'
-          style={{ position: 'fixed', right: '5vh', bottom: '5vh' }}
-        >
-          <Button
-            className={classes.Button + ' ' + classes.InsertButton}
-            variant='contained'
-            color='success'
-            onClick={() => openAutocorrectionForm()}
-          >
-            <AddCircleIcon className={classes.Icons} />
-            NEW
-          </Button>
-          <Button
-            className={classes.Button + ' ' + classes.UpdateButton}
-            variant='contained'
-            onClick={() =>
-              handleAutocorrectionUpdate(selectedUpdateAutocorrection.id)
-            }
-          >
-            <ModeEditIcon className={classes.Icons} />
-            EDIT
-          </Button>
-          <Button
-            className={classes.Button + ' ' + classes.DeleteButton}
-            variant='contained'
-            color='error'
-            onClick={() => {
-              handleAutocorrectionDelete(selectedUpdateAutocorrection.id);
+          <div
+            style={{
+              position: 'fixed',
+              left: '12vw',
+              bottom: '5vh',
+              width: '8vw',
             }}
           >
-            <DeleteIcon className={classes.Icons} />
-            REMOVE
-          </Button>
+            <Button
+              className={classes.Button + ' ' + classes.DetailsButton}
+              variant='contained'
+              color='success'
+              onClick={() =>
+                handleAutocorrectionDetailsTable(
+                  selectedUpdateAutocorrection.id
+                )
+              }
+            >
+              SHOW DETAILS
+            </Button>
+          </div>
+          {!showAutocorrectionUpdateForm && !showAutocorrectionCreateForm && (
+            <PaginationEl
+              autocorrections={autocorrections}
+              setAutocorrections={setAutocorrections}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              autocorrectionsPerPage={autocorrectionsPerPage}
+              currentAutocorrections={currentAutocorrections}
+              setCurrentAutocorrections={setCurrentAutocorrections}
+              // show or hide dropdown
+              showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
+              showAutocorrectionCreateForm={showAutocorrectionCreateForm}
+            />
+          )}
+          <div
+            align='right'
+            style={{ position: 'fixed', right: '5vh', bottom: '5vh' }}
+          >
+            <Button
+              className={classes.Button + ' ' + classes.InsertButton}
+              variant='contained'
+              color='success'
+              onClick={() => openAutocorrectionForm()}
+            >
+              <AddCircleIcon className={classes.Icons} />
+              NEW
+            </Button>
+            <Button
+              className={classes.Button + ' ' + classes.UpdateButton}
+              variant='contained'
+              onClick={() =>
+                handleAutocorrectionUpdate(selectedUpdateAutocorrection.id)
+              }
+            >
+              <ModeEditIcon className={classes.Icons} />
+              EDIT
+            </Button>
+            <Button
+              className={classes.Button + ' ' + classes.DeleteButton}
+              variant='contained'
+              color='error'
+              onClick={() => {
+                handleAutocorrectionDelete(selectedUpdateAutocorrection.id);
+              }}
+            >
+              <DeleteIcon className={classes.Icons} />
+              REMOVE
+            </Button>
+          </div>
         </div>
-      </div>
-
+      )}
+      {/* Update | Create | ShowDetailsTable */}
       {showAutocorrectionCreateForm && (
         <AutocorrectionCreateForm
           // autocorrections data
@@ -408,6 +448,21 @@ function AutocorrectionsTable({
           setShowAutocorrectionTable={setShowAutocorrectionTable}
           showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
           setShowAutocorrectionUpdateForm={setShowAutocorrectionUpdateForm}
+        />
+      )}
+      {showAutocorrectionDetailsTable && (
+        <AutoCorrectionDetailsTable
+          // autocorrectionDetails data
+          autocorrectionDetails={autocorrectionDetails}
+          setAutocorrectionDetails={setAutocorrectionDetails}
+          autocorrectionDetailsGetURL={autocorrectionDetailsGetURL}
+          selectedUpdateAutocorrection={selectedUpdateAutocorrection}
+          // hide table, show autocorrection update form
+          setShowAutocorrectionTable={setShowAutocorrectionTable}
+          setShowFooterButtons={setShowFooterButtons}
+          showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
+          setShowAutocorrectionUpdateForm={setShowAutocorrectionUpdateForm}
+          setShowAutocorrectionDetailsTable={setShowAutocorrectionDetailsTable}
         />
       )}
     </div>

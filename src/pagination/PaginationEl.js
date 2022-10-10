@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { withStyles } from '@material-ui/core';
-import styles from './styles/AutocorrectionsTableStyles';
+import styles from '../styles/AutocorrectionsTableStyles';
 import PaginationDropdown from './PaginationDropdown';
 
 function PaginationEl({

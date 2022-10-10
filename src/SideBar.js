@@ -14,19 +14,25 @@ function SideBar({ classes }) {
   const autocorrectionCreateURL = 'http://localhost:3000/autocorrections';
   const autocorrectionUpdateURL = 'http://localhost:3000/autocorrections/';
   const autocorrectionDeleteURL = 'http://localhost:3000/autocorrections/';
+  const autocorrectionDetailsGetURL =
+    'http://localhost:3000/autocorrectionDetails';
 
   // data to fetch
   const [autocorrections, setAutocorrections] = useState([]);
+  const [autocorrectionDetails, setAutocorrectionDetails] = useState([]);
 
   // hide forms and table
   const [showAutocorrectionCreateForm, setShowAutocorrectionCreateForm] =
     useState(false);
   const [showAutocorrectionUpdateForm, setShowAutocorrectionUpdateForm] =
     useState(false);
+  const [showAutocorrectionDetailsTable, setShowAutocorrectionDetailsTable] =
+    useState(false);
   const [showAutocorrectionTable, setShowAutocorrectionTable] = useState(true);
 
   useEffect(() => {
     getData(autocorrectionsGetURL, setAutocorrections);
+    getData(autocorrectionDetailsGetURL, setAutocorrectionDetails);
   }, []);
 
   return (
@@ -59,22 +65,31 @@ function SideBar({ classes }) {
                 <AutocorrectionsTable
                   // autocorrections data
                   autocorrections={autocorrections}
+                  autocorrectionDetails={autocorrectionDetails}
+                  setAutocorrectionDetails={setAutocorrectionDetails}
                   setAutocorrections={setAutocorrections}
                   // URLs
                   autocorrectionsGetURL={autocorrectionsGetURL}
+                  autocorrectionDetailsGetURL={autocorrectionDetailsGetURL}
                   autocorrectionCreateURL={autocorrectionCreateURL}
                   autocorrectionUpdateURL={autocorrectionUpdateURL}
                   autocorrectionDeleteURL={autocorrectionDeleteURL}
                   // show/hide autocorrection forms and table
                   showAutocorrectionTable={showAutocorrectionTable}
-                  setShowAutocorrectionTable={setShowAutocorrectionTable}
                   showAutocorrectionCreateForm={showAutocorrectionCreateForm}
+                  showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
+                  showAutocorrectionDetailsTable={
+                    showAutocorrectionDetailsTable
+                  }
+                  setShowAutocorrectionTable={setShowAutocorrectionTable}
                   setShowAutocorrectionCreateForm={
                     setShowAutocorrectionCreateForm
                   }
-                  showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
                   setShowAutocorrectionUpdateForm={
                     setShowAutocorrectionUpdateForm
+                  }
+                  setShowAutocorrectionDetailsTable={
+                    setShowAutocorrectionDetailsTable
                   }
                 />
               </div>
