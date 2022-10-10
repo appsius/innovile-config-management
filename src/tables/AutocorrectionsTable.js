@@ -92,7 +92,6 @@ function AutocorrectionsTable({
       (currentPage - 1) * autocorrectionsPerPage,
       currentPage * autocorrectionsPerPage
     );
-
     setCurrentAutocorrections(currentAutos);
   };
 
@@ -191,7 +190,6 @@ function AutocorrectionsTable({
       const filteredAutoDetails = autocorrectionDetails.filter(
         (autocorr) => autocorr.autocorrection_id === id
       );
-      console.log(filteredAutoDetails);
       setAutocorrectionDetails(filteredAutoDetails);
       setShowAutocorrectionDetailsTable(true);
       setShowAutocorrectionTable(false);
@@ -450,7 +448,7 @@ function AutocorrectionsTable({
           setShowAutocorrectionUpdateForm={setShowAutocorrectionUpdateForm}
         />
       )}
-      {showAutocorrectionDetailsTable && (
+      {
         <AutoCorrectionDetailsTable
           // autocorrectionDetails data
           autocorrectionDetails={autocorrectionDetails}
@@ -458,13 +456,14 @@ function AutocorrectionsTable({
           autocorrectionDetailsGetURL={autocorrectionDetailsGetURL}
           selectedUpdateAutocorrection={selectedUpdateAutocorrection}
           // hide table, show autocorrection update form
-          setShowAutocorrectionTable={setShowAutocorrectionTable}
-          setShowFooterButtons={setShowFooterButtons}
           showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
+          showAutocorrectionDetailsTable={showAutocorrectionDetailsTable}
+          setShowAutocorrectionTable={setShowAutocorrectionTable}
           setShowAutocorrectionUpdateForm={setShowAutocorrectionUpdateForm}
           setShowAutocorrectionDetailsTable={setShowAutocorrectionDetailsTable}
+          setShowFooterButtons={setShowFooterButtons}
         />
-      )}
+      }
     </div>
   );
 }

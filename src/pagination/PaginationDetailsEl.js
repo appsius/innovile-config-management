@@ -24,10 +24,10 @@ function PaginationDetailsEl({
     pageNumbers.push(i);
   }
 
-  const pageNumbersItems = pageNumbers.map((number) => {
+  const pageNumbersItems = pageNumbers.map((number, idx) => {
     return (
       <li
-        key={number}
+        key={idx}
         id={number}
         className={
           classes.PaginationItem +
@@ -40,6 +40,8 @@ function PaginationDetailsEl({
     );
   });
 
+  console.log(currentPage);
+
   return (
     <ul
       className={classes.PaginationContainer}
@@ -51,13 +53,31 @@ function PaginationDetailsEl({
       }}
       align='center'
     >
-      {pageNumbersItems.slice(0, 2)}
-      {currentPage > 2 && '...'}
-      {currentPage >= 3 &&
-        currentPage <= pageNumbersItems.length - 2 &&
-        pageNumbersItems[currentPage - 1]}
-      {currentPage !== pageNumbersItems.length - 1 && '...'}
-      {pageNumbersItems.slice(pageNumbersItems.length - 2)}
+      {pageNumbersItems}
+
+      {/* TODO - Pagination */}
+      {/* {currentPage === 1 &&
+        pageNumbersItems.length > 5 &&
+        pageNumbersItems.slice(0, 5)}
+      {currentPage === 1 && pageNumbersItems.length <= 5 && pageNumbersItems}
+
+      {currentPage !== 1 && pageNumbersItems.length <= 5 && pageNumbersItems}
+
+      {currentPage === pageNumbersItems.length &&
+        pageNumbersItems.length <= 5 &&
+        pageNumbersItems}
+
+      {currentPage === pageNumbersItems.length &&
+        pageNumbersItems.length > 5 &&
+        pageNumbersItems.slice(pageNumbersItems - 5)}
+
+      {currentPage !== pageNumbersItems.length &&
+        pageNumbersItems.length < 5 &&
+        pageNumbersItems}
+
+      {currentPage !== pageNumbersItems.length &&
+        pageNumbersItems.length > 5 &&
+        pageNumbersItems.slice(pageNumbersItems - 5)} */}
 
       <PaginationDetailsDropdown
         autocorrectionDetails={autocorrectionDetails}

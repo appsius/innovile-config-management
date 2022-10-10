@@ -43,7 +43,7 @@ function PaginationDetailsDropdown({
     <Paper
       style={{
         position: 'absolute',
-        left: '11vw',
+        left: '13.5vw',
         bottom: '1.25vh',
         margin: '0 1rem',
         backgroundColor: 'rgb(250, 250, 250)',

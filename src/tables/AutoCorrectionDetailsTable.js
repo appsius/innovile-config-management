@@ -18,6 +18,26 @@ import {
   Paper,
 } from '@mui/material';
 
+// table rows styles
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 15,
+  },
+}));
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: '',
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
 function AutoCorrectionDetailsTable({
   classes,
   // autocorrections data
@@ -29,14 +49,11 @@ function AutoCorrectionDetailsTable({
   showAutocorrectionCreateForm,
   showAutocorrectionUpdateForm,
   showAutocorrectionDetailsTable,
-  // setShowAutocorrectionTable,
-  // setShowAutocorrectionCreateForm,
-  // setShowAutocorrectionUpdateForm,
+  setShowAutocorrectionTable,
   setShowFooterButtons,
   setShowAutocorrectionDetailsTable,
 }) {
   // select autocorrection update data
-  console.log(autocorrectionDetails);
 
   const nowDateTime = moment(new Date())
     .tz('Europe/Istanbul')
@@ -45,7 +62,7 @@ function AutoCorrectionDetailsTable({
   const [currentAutocorrections, setCurrentAutocorrections] = useState([]);
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(21);
+  const [autocorrectionsPerPage, setAutocorrectionsPerPage] = useState(20);
   // initial autocorrections
   const getCurrentAutocorrections = () => {
     const currentAutos = autocorrectionDetails.slice(
@@ -59,25 +76,17 @@ function AutoCorrectionDetailsTable({
     getCurrentAutocorrections();
   }, []);
 
-  // table rows styles
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 15,
-    },
-  }));
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: '',
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
+  const handleAutocorrectionDetailExport = () => {
+    setShowAutocorrectionDetailsTable(false);
+    setShowAutocorrectionTable(true);
+    setShowFooterButtons(true);
+  };
+
+  const handleCloseAutoCorrectionDetail = () => {
+    setShowAutocorrectionDetailsTable(false);
+    setShowAutocorrectionTable(true);
+    setShowFooterButtons(true);
+  };
 
   const autocorrectionsItems = (
     <Table sx={{ minWidth: 700 }} aria-label='customized table'>
@@ -128,58 +137,57 @@ function AutoCorrectionDetailsTable({
   );
 
   return (
-    <div>
-      <TableContainer
-        component={Paper}
-        // className={showAutocorrectionTable ? classes.Show : classes.Hide}
-      >
-        {autocorrectionsItems}
-      </TableContainer>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-        }}
-      >
-        {
-          <PaginationDetailsEl
-            autocorrectionDetails={autocorrectionDetails}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            autocorrectionsPerPage={autocorrectionsPerPage}
-            currentAutocorrections={currentAutocorrections}
-            setCurrentAutocorrections={setCurrentAutocorrections}
-            // show or hide dropdown
-            showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
-            showAutocorrectionCreateForm={showAutocorrectionCreateForm}
-          />
-        }
+    showAutocorrectionDetailsTable && (
+      <div>
+        <TableContainer component={Paper}>
+          {autocorrectionsItems}
+        </TableContainer>
         <div
-          align='right'
-          style={{ position: 'fixed', right: '5vh', bottom: '5vh' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-around',
+          }}
         >
-          <Button
-            className={classes.Button + ' ' + classes.CloseDetailsButton}
-            variant='contained'
-            color='success'
-            // onClick={() => openAutocorrectionForm()}
+          {
+            <PaginationDetailsEl
+              autocorrectionDetails={autocorrectionDetails}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              autocorrectionsPerPage={autocorrectionsPerPage}
+              currentAutocorrections={currentAutocorrections}
+              setCurrentAutocorrections={setCurrentAutocorrections}
+              // show or hide dropdown
+              showAutocorrectionUpdateForm={showAutocorrectionUpdateForm}
+              showAutocorrectionCreateForm={showAutocorrectionCreateForm}
+            />
+          }
+          <div
+            align='right'
+            style={{ position: 'fixed', right: '5vh', bottom: '5vh' }}
           >
-            Close
-          </Button>
-          <Button
-            className={classes.Button + ' ' + classes.ExportButton}
-            variant='contained'
-            // onClick={() =>
-            // handleAutocorrectionUpdate(selectedUpdateAutocorrection.id)
-            // }
-          >
-            Export
-          </Button>
+            <Button
+              className={classes.Button + ' ' + classes.CloseDetailsButton}
+              variant='contained'
+              color='success'
+              onClick={() => handleCloseAutoCorrectionDetail()}
+            >
+              Close
+            </Button>
+            <Button
+              className={classes.Button + ' ' + classes.ExportButton}
+              variant='contained'
+              onClick={() =>
+                handleAutocorrectionDetailExport(currentAutocorrections)
+              }
+            >
+              Export
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 }
 
