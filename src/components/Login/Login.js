@@ -18,8 +18,16 @@ import {
   Typography,
   Container,
 } from '@mui/material';
+import { withStyles } from '@material-ui/core';
+import styles from '../../styles/LoginStyles';
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#079caa',
+    },
+  },
+});
 
 async function loginUser(credentials) {
   return fetch('http://localhost:8080/login', {
@@ -31,7 +39,29 @@ async function loginUser(credentials) {
   }).then((data) => data.json());
 }
 
-export default function Login({ setToken }) {
+const CssTextField = withStyles({
+  root: {
+    '& label.Mui-focused': {
+      color: 'red',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#079caa',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#079caa',
+      },
+      '&:hover fieldset': {
+        borderColor: '#079caa',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#079caa',
+      },
+    },
+  },
+})(TextField);
+
+function Login({ classes, setToken }) {
   const usersGetURL = 'http://localhost:3000/users';
   const [email, setUserEmail] = useState('');
   const [password, setUserPassword] = useState('');
@@ -82,7 +112,7 @@ export default function Login({ setToken }) {
             letterSpacing: '1.25px',
           }}
         >
-          {`User email | user password is wrong`}
+          {`User email | user password is wrong!`}
         </Alert>
       )}
       <ThemeProvider theme={theme}>
@@ -100,7 +130,7 @@ export default function Login({ setToken }) {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component='h1' variant='h5'>
-              Sign in
+              Innovile Case Study
             </Typography>
             <Box
               component='form'
@@ -108,7 +138,7 @@ export default function Login({ setToken }) {
               noValidate
               sx={{ mt: 1 }}
             >
-              <TextField
+              <CssTextField
                 margin='normal'
                 required
                 fullWidth
@@ -119,7 +149,7 @@ export default function Login({ setToken }) {
                 autoFocus
                 onChange={(e) => setUserEmail(e.target.value)}
               />
-              <TextField
+              <CssTextField
                 margin='normal'
                 required
                 fullWidth
@@ -139,6 +169,7 @@ export default function Login({ setToken }) {
                 fullWidth
                 variant='contained'
                 sx={{ mt: 3, mb: 2, bgcolor: '#079caa' }}
+                className={classes.LoginButton}
               >
                 Sign In
               </Button>
@@ -165,3 +196,5 @@ export default function Login({ setToken }) {
 Login.propTypes = {
   setToken: PropTypes.func.isRequired,
 };
+
+export default withStyles(styles)(Login);
