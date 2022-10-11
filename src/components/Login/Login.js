@@ -83,7 +83,7 @@ function Login({ classes, setToken }) {
         setShowAlert(true);
         setTimeout(() => {
           setShowAlert(false);
-        }, 3000);
+        }, 3000); 
       }
       if (user.email === email && user.password === password) {
         setToken(token);

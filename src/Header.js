@@ -22,18 +22,19 @@ function Header({ classes, removeToken }) {
         variant='contained'
         onClick={() => handleClickLogout()}
         style={{
-          backgroundColor: 'rgb(45 236 255)',
-          color: 'black',
-          height: '4vh',
-          width: '7vw',
+          backgroundColor: '#079caa',
+          color: 'white',
+          height: '3.75vh',
+          padding: '2px 10px',
           marginRight: '10px',
+          letterSpacing: '2px',
         }}
       >
         <LockIcon
-          sx={{ color: 'black', marginRight: '8px' }}
-          style={{ height: '2.25vh', width: '2.25vh' }}
+          sx={{ color: 'white', marginRight: '5px' }}
+          style={{ height: '2vh', width: '2vh' }}
         />
-        LOGOUT
+        Logout
       </Button>
     </div>
   );
