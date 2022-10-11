@@ -2,7 +2,7 @@
 
 - run <npm install>
 
-## Json-server rendering (Fetching data)
+## Json-server rendering (fetching data)
 
 - Under [innovile-conf-management/server] folder run [node server.js]
 - Go to "http://localhost:3000"
