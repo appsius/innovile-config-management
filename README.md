@@ -10,7 +10,8 @@
 ## Render client side (react app)
 
 - Under [innovile-conf-management] folder run [npm start]
-- After that you will be asked "Would you like to run the app on another port instead? » (Y/n)" - Enter "Y"
+- After that you will be asked "Would you like to run the app on another port instead? » (Y/n)?"
+  --> Enter "Y"
 - Go to "http://localhost:3001"
 
 ## Render server side (fetch auth tokens)
