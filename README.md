@@ -1,14 +1,19 @@
-## Install Node-Modules
+## Install node_modules
 
 - run <npm install>
 
-## Server Side Rendering
+## Json-server rendering (Fetching data)
 
-- Under [server] folder run <node server.js>
-- Open json-server on "http://localhost:3000"
+- Under [innovile-conf-management/server] folder run <node server.js>
+- Go to "http://localhost:3000"
 
-## Client Side Rendering
+## Render client side (react app)
 
-- On [innovile-conf-management] run <npm start>
+- Under [innovile-conf-management] folder run <npm start>
 - After that you will be asked "Would you like to run the app on another port instead? » (Y/n)" - Enter "Y"
-- App will be opened on "http://localhost:3001"
+- Go to "http://localhost:3001"
+
+## Render server side (fetch auth tokens)
+
+- Under [innovile-conf-management] folder run <node server.js>
+- Go to "http://localhost:8080/login"

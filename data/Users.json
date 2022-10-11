@@ -158,5 +158,13 @@
     "email": "vaugarj@is.gd",
     "password": "G7v8igDN1w4",
     "birth_date": "7/8/2009"
+  },
+  {
+    "id": 21,
+    "first_name": "İlyas",
+    "last_name": "Ustunkaya",
+    "email": "me",
+    "password": "1234",
+    "birth_date": "7/8/2006"
   }
 ]

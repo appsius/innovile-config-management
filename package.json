@@ -15,7 +15,6 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "date-fns": "^2.0.0",
-    "express": "^4.18.1",
     "file-saver": "^2.0.5",
     "final-form": "latest",
     "final-form-material-ui": "latest",
@@ -59,5 +58,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
   }
 }

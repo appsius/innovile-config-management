@@ -4,8 +4,9 @@ import { withStyles } from '@material-ui/core';
 import AutocorrectionsTable from './tables/AutocorrectionsTable';
 import { getData } from './helpers';
 import styles from './styles/SidebarStyles';
+import Header from './Header';
 
-function SideBar({ classes }) {
+function SideBar({ classes, removeToken }) {
   // if no data cond.
   const noDataText = 'Neither AutoCorrections nor Their Details Found!';
 
@@ -37,6 +38,7 @@ function SideBar({ classes }) {
 
   return (
     <div className={classes.Content}>
+      <Header removeToken={removeToken} />
       <div className={classes.Sidebar}>
         <div className={classes.Menu}>
           <Button
